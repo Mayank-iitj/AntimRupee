@@ -52,6 +52,11 @@ def call_openrouter(system_prompt: str, user_prompt: str, is_json: bool = False)
     data = response.json()
     return data["choices"][0]["message"]["content"]
 
+@app.get("/")
+def health_check():
+    return {"status": "ok", "service": "Antim Rupee API", "message": "Backend is running!"}
+
+
 @app.get("/api/summary")
 def get_summary(district: str = "Muzaffarpur", period: Optional[str] = None):
     conn = get_db()
