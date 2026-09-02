@@ -99,7 +99,7 @@ npm run dev
 
 The repository is fully configured for modern PaaS deployment:
 
-*   **Backend (Render):** Connect this repository to Render and create a **New Blueprint**. The included `render.yaml` automatically provisions a Python environment, configures Uvicorn, and mounts a **persistent 1GB disk** for the DuckDB database.
+*   **Backend (Render):** Connect this repository to Render and create a **New Blueprint**. The included `render.yaml` is optimized for Render's **Free Tier Web Service**. It provisions the Python environment and automatically runs the AI data generation scripts during the build phase so your DuckDB database is baked into the image.
 *   **Frontend (Vercel):** Connect this repository to Vercel. Set the **Root Directory** to `web`. Add the environment variable `VITE_API_BASE_URL` pointing to your Render backend URL. The included `vercel.json` ensures React Router client-side routing works seamlessly.
 
 ---
