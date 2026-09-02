@@ -1,5 +1,4 @@
-<div align="center">
-  <img src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&q=80&w=1200" alt="Antim Rupee Hero" width="100%" style="border-radius: 12px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);" />
+
 
   <h1>🇮🇳 Antim Rupee</h1>
   
