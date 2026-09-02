@@ -29,19 +29,9 @@ const LiveDecoder = () => {
       
       setLogs(prev => [...prev.slice(-2), newLog]);
       
-      try {
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/decode`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ raw_string: error.raw })
-        });
-        const data = await response.json();
-        
-        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: data } : l));
-      } catch (err) {
-        console.error("Decode error", err);
-        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'error' } : l));
-      }
+      setTimeout(() => {
+        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: error.json } : l));
+      }, 1500);
       
       index++;
     }, 5000);
