@@ -3,3 +3,9 @@ fastapi
 uvicorn[standard]
 pydantic
 PyYAML
+pandas
+numpy
+google-genai
+scipy
+statsmodels
+pyarrow
