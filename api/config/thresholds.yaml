@@ -1,0 +1,11 @@
+dropout_detection:
+  max_days_since_fto: 15
+  consecutive_failures: 2
+  seasonality_sigma: 2.0
+
+clustering:
+  min_support: 5                 # Minimum workers in a cluster to be statistically significant
+  alpha_fdr: 0.05                # Benjamini-Hochberg Q-value threshold
+
+agent:
+  escalation_payment_threshold: 0.80  # Escalate if <80% of resolved workers actually got paid

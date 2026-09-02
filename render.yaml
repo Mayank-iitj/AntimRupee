@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: antim-rupee-api
+    env: python
+    region: singapore # Adjust as needed
+    buildCommand: "cd api && pip install -r requirements.txt"
+    startCommand: "cd api && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DB_PATH
+        value: /data/warehouse.duckdb
+      - key: OPENROUTER_API_KEY
+        sync: false # Must be set in Render dashboard manually
+      - key: CORS_ORIGINS
+        sync: false # Set to your Vercel URL in Render dashboard
+    disk:
+      name: duckdb-data
+      mountPath: /data
+      sizeGB: 1

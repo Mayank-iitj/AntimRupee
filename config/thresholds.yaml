@@ -1,0 +1,5 @@
+# thresholds.yaml
+seasonality_sigma: 2.0
+min_support: 20
+fdr_alpha: 0.05
+confidence_floor: 0.8

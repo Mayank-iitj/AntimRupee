@@ -40,29 +40,20 @@ graph TD
     G --> I[Action: Dispatch Field Worker]
 ```
 
-## 🚀 Running Locally
+## 🚀 Running and Deploying
 
-This project is built using **React 19 + Vite**, leveraging **Framer Motion** for fluid 60fps animations and **Tailwind CSS** for styling.
+This project is built using **React 19 + Vite**, leveraging **Framer Motion** for fluid 60fps animations and **Tailwind CSS** for styling. The backend is powered by **FastAPI** and **DuckDB**.
 
-### Prerequisites
-- Node.js (v18+)
-- npm or pnpm
+### Local Development
+1. **Backend**: `cd api`, set your `OPENROUTER_API_KEY` in `.env`, and run `uvicorn main:app --reload`
+2. **Frontend**: `cd web`, create `.env` with `VITE_API_BASE_URL=http://localhost:8000/api`, and run `npm run dev`
 
-### Installation
+### Production Deployment
 
-```bash
-# Clone the repository
-git clone https://github.com/your-org/antim-rupee.git
-cd antim-rupee/web
+The repository is configured for modern PaaS deployment:
 
-# Install dependencies
-npm install
-
-# Start the dev server
-npm run dev
-```
-
-Visit `http://localhost:5173` to view the application.
+*   **Backend (Render):** Connect this repository to Render and create a **New Blueprint**. The included `render.yaml` will automatically configure a Python environment, start Uvicorn, and mount a persistent 1GB disk for the DuckDB database.
+*   **Frontend (Vercel):** Connect this repository to Vercel. Set the **Root Directory** to `web`. Add the environment variable `VITE_API_BASE_URL` pointing to your Render backend URL. The included `vercel.json` ensures React Router works correctly.
 
 ## 🏆 Hackathon Notes
 - **UI/UX:** We designed this with a premium "Glassmorphism" aesthetic to prove that Government software can look and feel like top-tier enterprise SaaS.

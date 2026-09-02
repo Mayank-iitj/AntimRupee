@@ -1,0 +1,32 @@
+version: "1.0"
+causes:
+  ACCOUNT_CLOSED:
+    owner: "STATE_BANK"
+    action: "Call Branch Manager"
+    batchable: true
+    patterns:
+      - ".*account closed.*"
+      - ".*acct closed.*"
+      - ".*closed or transferred.*"
+  IFSC_INVALID:
+    owner: "PANCHAYAT_DEO"
+    action: "Re-enter IFSC"
+    batchable: false
+    patterns:
+      - ".*invalid ifsc.*"
+      - ".*ifsc code mismatch.*"
+  AADHAAR_NOT_MAPPED:
+    owner: "NPCI"
+    action: "Seed Aadhaar at Bank"
+    batchable: true
+    patterns:
+      - ".*aadhaar not mapped.*"
+      - ".*not mapped to iin.*"
+  DORMANT_ACCOUNT:
+    owner: "STATE_BANK"
+    action: "Reactivate Account"
+    batchable: true
+    patterns:
+      - ".*dormant.*"
+      - ".*inactive.*"
+      - ".*frozen.*"

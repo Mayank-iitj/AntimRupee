@@ -1,0 +1,6 @@
+# scoring.yaml
+weights:
+  impact: 1.0     # workers_affected
+  value: 1.0      # log1p(unpaid_total)
+  urgency: 1.0    # mean_days_pending
+  severity: 1.0   # share of affected workers with no other recorded income

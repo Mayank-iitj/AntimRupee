@@ -1,0 +1,71 @@
+# reason_map.yaml
+version: "1.0"
+mappings:
+  NPCI_NOT_MAPPED:
+    owner: "Bank branch (+ worker signature)"
+    action: "Annexure-I seeding drive at branch"
+    batchable: "Yes, per branch"
+    resolution_days: "7-15"
+    patterns:
+      - "aadhaar number not mapped"
+      - "inactive aadhaar number"
+  NAME_MISMATCH:
+    owner: "Panchayat data entry"
+    action: "Correct job card to match bank record"
+    batchable: "Yes, per operator"
+    resolution_days: "3-7"
+    patterns:
+      - "does not tally"
+  ACCOUNT_DORMANT_FROZEN:
+    owner: "Bank branch"
+    action: "Reactivation / re-KYC camp"
+    batchable: "Yes, per branch"
+    resolution_days: "7-20"
+    patterns:
+      - "account blocked or frozen"
+  ACCOUNT_CLOSED_INVALID:
+    owner: "Panchayat data entry (+ worker)"
+    action: "Capture new account, re-verify"
+    batchable: "Partly"
+    resolution_days: "10-20"
+    patterns:
+      - "no such account"
+      - "invalid account type"
+      - "account closed or transferred"
+  IFSC_INVALID:
+    owner: "Panchayat data entry"
+    action: "Correct IFSC in MIS"
+    batchable: "Yes, per operator"
+    resolution_days: "1-3"
+    patterns:
+      - "invalid ifsc"
+  KYC_INCOMPLETE:
+    owner: "Bank branch (+ worker)"
+    action: "Complete KYC"
+    batchable: "Yes, per branch"
+    resolution_days: "7-15"
+    patterns:
+      - "document pending for act. holder"
+      - "customer to refer to the branch"
+      - "account holder turning major"
+  TECHNICAL_TRANSIENT:
+    owner: "System"
+    action: "Auto-regenerate FTO"
+    batchable: "Automatic"
+    resolution_days: "1-2"
+    patterns:
+      - "network failure"
+      - "cbs timeout"
+  ADMINISTRATIVE_HOLD:
+    owner: "State / centre"
+    action: "Fund release, UC submission"
+    batchable: "No"
+    resolution_days: "Indefinite"
+    patterns: []
+  UNKNOWN:
+    owner: "Triage queue"
+    action: "Manual review"
+    batchable: "No"
+    resolution_days: "-"
+    patterns:
+      - "unclaimed"

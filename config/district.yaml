@@ -1,0 +1,12 @@
+district: "Muzaffarpur"
+state: "Bihar"
+block_count: 16
+rejection_rate_baseline: 0.032
+periods:
+  - id: 202601
+    start: 2026-04-01
+    end: 2026-04-15
+  - id: 202602
+    start: 2026-04-16
+    end: 2026-04-30
+wage_rate: 228

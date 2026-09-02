@@ -1,0 +1,5 @@
+duckdb
+fastapi
+uvicorn[standard]
+pydantic
+PyYAML

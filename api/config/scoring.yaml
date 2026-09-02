@@ -1,0 +1,8 @@
+weights:
+  impact: 0.35      # Workers affected
+  value: 0.30       # Unpaid total amount
+  urgency: 0.20     # Average days pending
+  effort: -0.15     # Negative weight for un-batchable causes
+
+formulas:
+  priority_score: "((impact_norm * 0.35) + (value_norm * 0.30) + (urgency_norm * 0.20)) + effort_modifier"
