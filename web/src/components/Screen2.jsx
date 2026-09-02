@@ -1,28 +1,29 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
-import { PieChart, Network, Terminal, Sparkles, ArrowRight } from 'lucide-react';
+import { PieChart, Network, Terminal, Sparkles, ArrowRight, MessageSquare, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { mockCauses } from '../utils/mockData';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const LiveDecoder = () => {
   const [logs, setLogs] = useState([]);
-  const bottomRef = useRef(null);
+  const { lang } = useLanguage();
   
-  const sampleErrors = [
-    { raw: "ERR_CD_99_ACCT_FRZ_KYC_FAIL", json: { cause: "Account Frozen", action: "Update KYC" } },
-    { raw: "REJ_NM_MSMTCH_AADHAAR_LNK_0XF", json: { cause: "Name Mismatch", action: "Re-link Aadhaar" } },
-    { raw: "FTO_RTRN_INACTV_ACNT_3992", json: { cause: "Dormant Account", action: "Reactivate Account" } },
-    { raw: "VLD_FAIL_IFSC_NOT_FND_RURAL", json: { cause: "Invalid IFSC", action: "Update Bank Details" } },
-    { raw: "SYS_ERR_UIDAI_AUTH_TMOUT_993", json: { cause: "Auth Timeout", action: "Retry Processing" } }
+  const sampleRequests = [
+    { type: 'audio', raw: "Audio_MH_094.wav", json: { category: "Road Repair", location: "Pune, Ward 4", urgency: "High" } },
+    { type: 'text', raw: "हमारे गाँव में पीने का पानी नहीं आ रहा है।", json: { category: "Water Supply", location: "Nashik, Rural", urgency: "Critical" } },
+    { type: 'audio', raw: "WhatsApp_Voice_Note_332.ogg", json: { category: "Electricity", location: "Nagpur, East", urgency: "Medium" } },
+    { type: 'text', raw: "School building roof needs immediate repair.", json: { category: "Education", location: "Mumbai, Slum", urgency: "High" } },
+    { type: 'audio', raw: "Telegram_Audio_112.mp3", json: { category: "Healthcare", location: "Solapur, North", urgency: "Critical" } }
   ];
 
   useEffect(() => {
     let index = 0;
-    const interval = setInterval(async () => {
-      const error = sampleErrors[index % sampleErrors.length];
+    const interval = setInterval(() => {
+      const request = sampleRequests[index % sampleRequests.length];
       const newLog = {
         id: Date.now(),
-        raw: error.raw,
+        type: request.type,
+        raw: request.raw,
         json: null,
         status: 'processing'
       };
@@ -30,11 +31,11 @@ const LiveDecoder = () => {
       setLogs(prev => [...prev.slice(-2), newLog]);
       
       setTimeout(() => {
-        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: error.json } : l));
+        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: request.json } : l));
       }, 1500);
       
       index++;
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
@@ -43,7 +44,7 @@ const LiveDecoder = () => {
       <div className="bg-[#1E293B] px-4 py-3 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Terminal size={16} className="text-gray-400" />
-          <span className="text-sm font-semibold text-gray-200">Gemini 1.5 Pro // Layer 2 Fallback Decoder</span>
+          <span className="text-sm font-semibold text-gray-200">Cloud STT + Gemini 1.5 Pro // Live Ingestion Stream</span>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -62,26 +63,28 @@ const LiveDecoder = () => {
               className="flex items-center gap-6 text-sm"
             >
               <div className="flex-1 bg-[#1E293B] p-4 rounded-lg border border-gray-700/50">
-                <div className="text-xs text-gray-500 mb-1">RAW TRACE INPUT</div>
-                <div className="text-red-400 font-medium break-all">{log.raw}</div>
+                <div className="text-xs text-gray-500 mb-1 flex items-center gap-1">
+                  {log.type === 'audio' ? <Mic size={12}/> : <MessageSquare size={12}/>} RAW INPUT
+                </div>
+                <div className="text-blue-400 font-medium break-all">{log.raw}</div>
               </div>
               
               <div className="flex flex-col items-center justify-center w-32 shrink-0">
                 {log.status === 'processing' ? (
                   <div className="flex flex-col items-center gap-2 text-[#A5A4FA]">
                     <Sparkles size={20} className="animate-pulse" />
-                    <span className="text-[10px] uppercase tracking-wider animate-pulse">Normalizing</span>
+                    <span className="text-[10px] uppercase tracking-wider animate-pulse">Extracting</span>
                   </div>
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-emerald-400">
                     <ArrowRight size={20} />
-                    <span className="text-[10px] uppercase tracking-wider">Mapped</span>
+                    <span className="text-[10px] uppercase tracking-wider">Processed</span>
                   </div>
                 )}
               </div>
               
               <div className="flex-1 bg-[#1E293B] p-4 rounded-lg border border-gray-700/50 relative">
-                <div className="text-xs text-gray-500 mb-1">STRUCTURED OUTPUT</div>
+                <div className="text-xs text-gray-500 mb-1">STRUCTURED INTENT</div>
                 {log.status === 'processing' ? (
                   <div className="flex items-center h-5">
                     <div className="flex gap-1">
@@ -90,15 +93,15 @@ const LiveDecoder = () => {
                       <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}/>
                     </div>
                   </div>
-                ) : log.status === 'error' ? (
-                  <div className="text-red-400">Error decoding trace</div>
                 ) : (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-emerald-300">
                     {`{`}
                     <br/>
-                    &nbsp;&nbsp;<span className="text-blue-300">"cause"</span>: <span className="text-yellow-200">"{log.json?.cause}"</span>,
+                    &nbsp;&nbsp;<span className="text-blue-300">"category"</span>: <span className="text-yellow-200">"{log.json?.category}"</span>,
                     <br/>
-                    &nbsp;&nbsp;<span className="text-blue-300">"action"</span>: <span className="text-yellow-200">"{log.json?.action}"</span>
+                    &nbsp;&nbsp;<span className="text-blue-300">"location"</span>: <span className="text-yellow-200">"{log.json?.location}"</span>,
+                    <br/>
+                    &nbsp;&nbsp;<span className="text-blue-300">"urgency"</span>: <span className="text-red-300">"{log.json?.urgency}"</span>
                     <br/>
                     {`}`}
                   </motion.div>
@@ -113,24 +116,16 @@ const LiveDecoder = () => {
 };
 
 export default function Screen2() {
-  const [causes, setCauses] = useState([]);
+  const { lang } = useLanguage();
+  
+  const categories = [
+    { category: "Road Repair", count: 45200 },
+    { category: "Water Supply", count: 38100 },
+    { category: "Electricity", count: 21500 },
+    { category: "Healthcare", count: 12400 },
+    { category: "Education", count: 11253 }
+  ];
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/causes`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch causes');
-        return res.json();
-      })
-      .then(fetchedCauses => {
-        setCauses(fetchedCauses);
-      })
-      .catch(err => {
-        console.error(err);
-        setCauses(mockCauses);
-      });
-  }, []);
-
-  // Soft glowing colors for bars
   const colors = ['#7584D6', '#80E5FF', '#A5A4FA', '#06b6d4', '#3b82f6'];
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -138,7 +133,7 @@ export default function Screen2() {
       return (
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xl">
           <p className="text-gray-900 font-medium mb-1">{label}</p>
-          <p className="text-primary font-mono text-lg">{payload[0].value} workers</p>
+          <p className="text-primary font-mono text-lg">{payload[0].value.toLocaleString()} requests</p>
         </div>
       );
     }
@@ -153,21 +148,21 @@ export default function Screen2() {
             <div className="p-2 bg-secondary/10 rounded-lg">
               <PieChart className="text-secondary" size={24} />
             </div>
-            <h2 className="text-3xl font-display font-bold text-gray-900">Root Cause Pareto</h2>
+            <h2 className="text-3xl font-display font-bold text-gray-900">{lang === 'hi' ? 'मांग श्रेणियाँ' : 'Demand Categories'}</h2>
           </div>
-          <p className="text-gray-600 text-lg">Four causes explain ~80% of silent exclusions.</p>
+          <p className="text-gray-600 text-lg">{lang === 'hi' ? 'राजमार्ग और जल आपूर्ति कुल मांग का ~65% हिस्सा हैं।' : 'Roads and Water Supply account for ~65% of total demand.'}</p>
         </div>
       </div>
       
       <div className="h-[400px] w-full relative">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={causes}
+            data={categories}
             margin={{ top: 20, right: 30, left: 20, bottom: 100 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" vertical={false} />
             <XAxis 
-              dataKey="cause_code" 
+              dataKey="category" 
               angle={-45} 
               textAnchor="end" 
               height={100} 
@@ -184,7 +179,7 @@ export default function Screen2() {
             />
             <Tooltip content={<CustomTooltip />} cursor={{fill: 'rgba(0,0,0,0.02)'}} />
             <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-              {causes.map((entry, index) => (
+              {categories.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Bar>
@@ -202,9 +197,9 @@ export default function Screen2() {
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-3xl rounded-full" />
           <Network className="text-primary mb-4" size={24} />
-          <h4 className="font-semibold text-gray-700">Deterministic Coverage</h4>
-          <p className="text-4xl font-display font-bold text-gray-900 mt-2">91<span className="text-xl text-primary">%</span></p>
-          <p className="text-sm text-gray-500 mt-2">Mapped via strict string rules</p>
+          <h4 className="font-semibold text-gray-700">{lang === 'hi' ? 'पाठ निष्कर्षण सटीकता' : 'Text Extraction Accuracy'}</h4>
+          <p className="text-4xl font-display font-bold text-gray-900 mt-2">94<span className="text-xl text-primary">%</span></p>
+          <p className="text-sm text-gray-500 mt-2">{lang === 'hi' ? 'संदेशों से इरादा और स्थान' : 'Intent & location from messages'}</p>
         </motion.div>
         
         <motion.div 
@@ -213,9 +208,9 @@ export default function Screen2() {
         >
           <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 blur-3xl rounded-full" />
           <Network className="text-secondary mb-4" size={24} />
-          <h4 className="font-semibold text-gray-700">Gemini Fallback Coverage</h4>
-          <p className="text-4xl font-display font-bold text-gray-900 mt-2">9<span className="text-xl text-secondary">%</span></p>
-          <p className="text-sm text-gray-500 mt-2">Unseen strings handled offline</p>
+          <h4 className="font-semibold text-gray-700">{lang === 'hi' ? 'वॉयस टू टेक्स्ट सटीकता' : 'Voice-to-Text Accuracy'}</h4>
+          <p className="text-4xl font-display font-bold text-gray-900 mt-2">89<span className="text-xl text-secondary">%</span></p>
+          <p className="text-sm text-gray-500 mt-2">{lang === 'hi' ? 'क्लाउड STT का उपयोग करना' : 'Using Cloud Speech-to-Text'}</p>
         </motion.div>
       </div>
     </div>

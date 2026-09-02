@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useMotionTemplate } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap, Database, Activity, Layers, Link as LinkIcon, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, MessageSquare, MapPin, Database, Activity, Layers, Link as LinkIcon, ChevronDown, CheckCircle2, Mic } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -120,13 +120,13 @@ const TextReveal = ({ text, className }) => {
       {words.map((word, index) => (
         word === "||PILL||" ? (
           <motion.span variants={child} key={index} className="inline-flex items-center justify-center border-2 border-gray-200 rounded-full px-6 py-2 mx-2 bg-white/50 backdrop-blur-md text-gray-900 shadow-sm relative -top-1">
-            {text.includes("अंतिम") ? "विफल भुगतान" : "Failed Payments"}
+            {text.includes("विकास") ? "विकास मांग" : "Infrastructure Demand"}
           </motion.span>
         ) : word === "||BR||" ? (
           <br key={index} className="hidden md:block" />
         ) : (
           <motion.span variants={child} key={index} style={{ display: 'inline-block', marginRight: '0.25em' }}>
-            {word === "Unblock" ? word : word === "Final" || word === "Mile." ? word : word}
+            {word}
           </motion.span>
         )
       ))}
@@ -223,23 +223,23 @@ export default function Home() {
           <div className="max-w-5xl mx-auto flex flex-col items-center">
             
             <motion.div initial={{opacity:0, scale:0.8}} animate={{opacity:1, scale:1}} transition={{duration: 0.5}} className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-6 flex items-center gap-2">
-              <span className="w-8 h-[1px] bg-gray-300"></span> Governance / DPI <span className="w-8 h-[1px] bg-gray-300"></span>
+              <span className="w-8 h-[1px] bg-gray-300"></span> Digital Public Infrastructure <span className="w-8 h-[1px] bg-gray-300"></span>
             </motion.div>
 
             <TextReveal 
-              text={lang === 'hi' ? "अंतिम मील पर ||PILL|| ||BR|| अनब्लॉक करें।" : "Unblock ||PILL|| ||BR|| at the Last Mile."}
+              text={lang === 'hi' ? "नागरिक की आवाज़ से ||PILL|| ||BR|| तक।" : "Map Citizen Voices to ||PILL|| ||BR|| Across India."}
               className="text-5xl lg:text-7xl font-display font-bold text-gray-900 tracking-tight leading-[1.15] mb-8"
             />
 
             <motion.p initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 0.6, duration: 0.8}} className="text-lg lg:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-              {lang === 'hi' ? "हम नागरिकों को सुरक्षा जाल से बाहर होने से बचाने के लिए डीबीटी विफलताओं का पता लगाने, उन्हें सामान्य बनाने और हल करने के लिए कच्चे लेनदेन के निशानों को संसाधित करते हैं।" : "We process raw transaction traces to detect, normalize, and resolve systemic DBT failures—preventing citizens from dropping out of the safety net."}
+              {lang === 'hi' ? "हम भारत के भाषाई क्षेत्रों में वॉयस, टेक्स्ट और मैसेजिंग ऐप के माध्यम से नागरिक विकास अनुरोधों को एकत्र करते हैं, जिससे नीति निर्माताओं को सार्वजनिक खर्च को संरेखित करने में मदद मिलती है।" : "We aggregate citizen development requests via voice, text, and messaging apps across India's linguistic regions, helping policymakers align public spending with real demand hotspots."}
             </motion.p>
 
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 0.8}} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
               <MagneticButton onClick={handleLaunchDashboard} className="w-full sm:w-auto px-8 py-4 bg-primary rounded-full text-white font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 group hover:shadow-[0_20px_25px_-5px_rgba(117,132,214,0.4)]">
                 {lang === 'hi' 
                   ? (isAuthenticated ? "डैशबोर्ड दर्ज करें" : "डैशबोर्ड लॉन्च करें") 
-                  : (isAuthenticated ? "Enter Dashboard" : "Sign In to Launch")} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  : (isAuthenticated ? "Enter Dashboard" : "View Heatmaps")} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
               <MagneticButton onClick={() => scrollToSection('how-it-works')} className="w-full sm:w-auto px-8 py-4 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold shadow-sm flex items-center justify-center gap-2 transition-colors hover:bg-gray-50">
                 {lang === 'hi' ? "यह कैसे काम करता है" : "How it Works"}
@@ -247,7 +247,7 @@ export default function Home() {
             </motion.div>
             
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 1.2}} className="mt-8 text-sm text-gray-500 font-medium flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-green-500" /> ₹<span className="text-primary font-bold"><CountUp to={4234} duration={2}/></span> Cr in stalled MNREGA wages unblocked this month
+              <CheckCircle2 size={16} className="text-green-500" /> <span className="text-primary font-bold"><CountUp to={128453} duration={2}/></span> requests mapped this month
             </motion.div>
           </div>
         </motion.div>
@@ -294,30 +294,28 @@ export default function Home() {
                 whileInView={{ scale: 1, y: 0 }}
                 className="px-8 py-4 bg-gray-900 rounded-full text-white font-medium shadow-2xl flex items-center gap-2"
               >
-                Open Live App <ArrowRight size={16} />
+                Open Live Map <ArrowRight size={16} />
               </motion.span>
             </div>
           </motion.div>
         </motion.div>
       </main>
 
-      {/* How it Works - 4 Step Sequence with SVG Path & GlowCards */}
+      {/* How it Works - 4 Step Sequence */}
       <section id="how-it-works" className="py-24 relative z-20">
         <div className="max-w-7xl mx-auto px-6 relative">
           
-          {/* Removed SVG Connecting Path on user request */}
-
           <div className="text-center mb-20 relative z-10">
             <div className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-4">HOW IT WORKS</div>
-            <h2 className="text-4xl font-display font-bold text-gray-900 mb-6">Explore Our Simple, Easy Process</h2>
+            <h2 className="text-4xl font-display font-bold text-gray-900 mb-6">From Voice Note to Policy Action</h2>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
             {[
-              { step: 1, icon: Database, title: "Data Ingestion", desc: "Raw FTO traces and failure logs are securely pulled from the state MIS." },
-              { step: 2, icon: Activity, title: "Normalization", desc: "Messy, bank-specific rejection strings are parsed into standardized causes." },
-              { step: 3, icon: Layers, title: "Clustering", desc: "Failures are grouped by geography and root cause to find systemic anomalies." },
-              { step: 4, icon: Zap, title: "Resolution", desc: "State agents receive prioritized action queues to unblock payments." }
+              { step: 1, icon: Mic, title: "Multilingual Ingestion", desc: "Citizens submit text/voice requests via WhatsApp, Telegram, or Web. Cloud Speech-to-Text transcribes regional languages." },
+              { step: 2, icon: Activity, title: "AI Translation & Extraction", desc: "Gemini 1.5 Pro translates requests and extracts location and intent (e.g. 'Road Repair'), while Vertex AI Vision analyzes uploaded photos." },
+              { step: 3, icon: Layers, title: "Data Aggregation", desc: "Requests are cross-referenced with Census data and PM Gati Shakti infrastructure plans in BigQuery." },
+              { step: 4, icon: MapPin, title: "Recommendation", desc: "Policymakers view demand heatmaps via Google Maps Platform and AI-prioritized project recommendations for optimal spending." }
             ].map((item, i) => (
               <motion.div 
                 key={item.step}
@@ -340,7 +338,7 @@ export default function Home() {
 
           <div className="mt-16 text-center relative z-10">
             <MagneticButton onClick={handleLaunchDashboard} className="px-8 py-4 bg-gray-900 rounded-full text-white font-medium shadow-xl inline-flex items-center gap-2">
-              Connect Now <ArrowRight size={18} />
+              View Heatmaps <ArrowRight size={18} />
             </MagneticButton>
           </div>
         </div>
@@ -349,12 +347,12 @@ export default function Home() {
       {/* Impact Gallery - InfiniteSpiral */}
       <section className="py-24 relative z-20 overflow-hidden bg-gray-900 text-white">
         <div className="text-center mb-16 relative z-10 max-w-3xl mx-auto px-6">
-          <h2 className="text-4xl font-display font-bold mb-4">Real Faces, Real Impact</h2>
+          <h2 className="text-4xl font-display font-bold mb-4">Real Voices, Real Infrastructure</h2>
           <p className="text-white/70">A glimpse at the communities we serve across the districts.</p>
         </div>
         <div style={{ height: '600px', position: 'relative', width: '100vw', left: '50%', right: '50%', marginLeft: '-50vw', marginRight: '-50vw' }}>
           <InfiniteSpiral
-            items={Array.from({ length: 28 }, (_, i) => `https://picsum.photos/seed/${i + 1}/400/400`)}
+            items={Array.from({ length: 28 }, (_, i) => `https://picsum.photos/seed/${i + 50}/400/400`)}
             animationMode="all"
             speed={0.55}
             radius={220}
@@ -383,7 +381,7 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-gray-900 mb-6 leading-tight pb-2">
             Powerful Integrations<br/>Made Simple
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto">Connect directly to government databases and banking endpoints without writing a single line of custom code.</p>
+          <p className="text-gray-600 max-w-2xl mx-auto">Connect directly to citizen messaging platforms and government databases effortlessly.</p>
         </div>
         
         {/* Infinite Marquee using LogoLoop */}
@@ -391,28 +389,32 @@ export default function Home() {
           <LogoLoop
             logos={[
               { 
-                title: "PFMS",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-primary transition-colors hover:shadow-md hover:-translate-y-1">PFMS</div>
+                title: "WhatsApp",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#25D366] font-bold text-xl hover:text-green-500 transition-colors hover:shadow-md hover:-translate-y-1">WhatsApp</div>
               },
               {
-                title: "NPCI",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-[#7584D6] transition-colors hover:shadow-md hover:-translate-y-1">NPCI</div>
+                title: "Telegram",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#0088cc] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1">Telegram</div>
               },
               {
-                title: "UIDAI",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-[#aa3bff] transition-colors hover:shadow-md hover:-translate-y-1">UIDAI</div>
+                title: "Cloud STT",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#f58220] font-bold text-xl hover:text-orange-500 transition-colors hover:shadow-md hover:-translate-y-1">Cloud STT</div>
               },
               {
-                title: "DBT Bharat",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-green-500 transition-colors hover:shadow-md hover:-translate-y-1">DBT Bharat</div>
+                title: "Census",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-primary transition-colors hover:shadow-md hover:-translate-y-1">Census</div>
               },
               { 
-                title: "NIC",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-primary transition-colors hover:shadow-md hover:-translate-y-1">NIC</div>
+                title: "Gati Shakti",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-primary transition-colors hover:shadow-md hover:-translate-y-1">Gati Shakti</div>
               },
               {
-                title: "SBI",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-gray-800 font-bold text-xl hover:text-[#7584D6] transition-colors hover:shadow-md hover:-translate-y-1">SBI DB</div>
+                title: "Google Maps",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1">Google Maps</div>
+              },
+              {
+                title: "Vertex AI",
+                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1">Vertex AI</div>
               },
             ]}
             speed={60}
@@ -436,10 +438,10 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-200">
-            <FAQItem question="How do you detect silent exclusions?" answer="We monitor the delta between marked 'completed work' in the MIS and actual cleared FTO (Fund Transfer Orders). If a worker's payment bounces repeatedly, they drop off the active ledger—we flag this void." />
-            <FAQItem question="Does this require PII?" answer="No. The core FDR Clustering algorithm operates entirely on anonymized metadata. PII is only exposed in the secure 'Trace View' for authorized agents." />
-            <FAQItem question="Can this integrate with existing state dashboards?" answer="Yes. Antim Rupee is built as an API-first engine. The frontend provided here is just a reference implementation." />
-            <FAQItem question="Is the platform suitable for beginners?" answer="Absolutely. The Action Queue translates cryptic bank errors into plain-english instructions like 'Call Branch Manager'." />
+            <FAQItem question="How do you handle multiple languages?" answer="We use state-of-the-art multilingual models (like Google Cloud Speech-to-Text and Translation API) to transcribe voice notes and translate text from regional languages into a unified format for analysis." />
+            <FAQItem question="How do you prevent duplicate requests?" answer="We use Gemini 1.5 Pro for entity extraction and geospatial clustering (via BigQuery) to identify similar requests from the same locality, merging them into 'demand hotspots'." />
+            <FAQItem question="Can this integrate with existing state dashboards?" answer="Yes. Antim Rupee provides a rich API that allows state governments to pull localized heatmaps and recommendations directly into their existing planning tools." />
+            <FAQItem question="How does the Recommendation Engine work?" answer="Vertex AI models assign priority scores based on request volume, severity of the issue, and alignment with existing budget and infrastructure gaps." />
           </div>
         </div>
       </section>
@@ -447,7 +449,7 @@ export default function Home() {
       {/* ScrollVelocity Banner */}
       <section className="py-20 bg-gray-50 overflow-hidden text-[#7e8ddd] opacity-60">
         <ScrollVelocity
-          texts={['EMPOWERING STATES • UNBLOCKING DBT •', 'ANTIM RUPEE • LAST MILE FINANCE •']} 
+          texts={['EMPOWERING CITIZENS • MAPPING DEMAND •', 'ANTIM RUPEE • INFRASTRUCTURE PRIORITIES •']} 
           velocity={60} 
           className="font-display font-bold tracking-tight"
         />

@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LayoutDashboard, BarChart3, ListTodo, AlertTriangle } from 'lucide-react';
+import { Map, BarChart3, ListTodo, AlertTriangle } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import Screen1 from '../components/Screen1';
 import Screen2 from '../components/Screen2';
 import Screen3 from '../components/Screen3';
 
 export default function Dashboard() {
-  const [activeTab, setActiveTab] = useState('screen3');
+  const [activeTab, setActiveTab] = useState('screen1');
 
   const { lang } = useLanguage();
 
   const navItems = [
-    { id: 'screen1', label: lang === 'hi' ? 'जिला दृश्य' : 'District View', icon: LayoutDashboard },
-    { id: 'screen2', label: lang === 'hi' ? 'मूल कारण' : 'Root Cause', icon: BarChart3 },
-    { id: 'screen3', label: lang === 'hi' ? 'कार्य सूची' : 'Worklist', icon: ListTodo },
+    { id: 'screen1', label: lang === 'hi' ? 'मांग हीटमैप' : 'Demand Heatmap', icon: Map },
+    { id: 'screen2', label: lang === 'hi' ? 'श्रेणी विश्लेषण' : 'Category Analysis', icon: BarChart3 },
+    { id: 'screen3', label: lang === 'hi' ? 'अनुशंसित परियोजनाएं' : 'Recommended Projects', icon: ListTodo },
   ];
 
   return (
@@ -23,7 +23,7 @@ export default function Dashboard() {
       <nav className="fixed top-24 left-1/2 -translate-x-1/2 z-40 shadow-lg rounded-full">
         <div className="bg-white/80 backdrop-blur-xl px-2 py-2 rounded-full flex items-center gap-2 border border-gray-200">
           <div className="px-4 py-2 border-r border-gray-200 mr-2">
-            <span className="font-display font-bold text-xl text-gray-900 tracking-tight">{lang === 'hi' ? 'राज्य दृश्य' : 'State View'}</span>
+            <span className="font-display font-bold text-xl text-gray-900 tracking-tight">{lang === 'hi' ? 'राष्ट्रीय दृश्य' : 'National View'}</span>
           </div>
           
           {navItems.map((item) => (
@@ -51,11 +51,11 @@ export default function Dashboard() {
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-yellow-50 border-yellow-200 border p-4 rounded-xl mb-8 flex items-start gap-3 shadow-sm"
+          className="bg-blue-50 border-blue-200 border p-4 rounded-xl mb-8 flex items-start gap-3 shadow-sm"
         >
-          <AlertTriangle className="text-yellow-600 shrink-0 mt-0.5" size={18} />
-          <p className="text-sm text-yellow-800 leading-relaxed">
-            <strong className="text-yellow-900">{lang === 'hi' ? 'डेटा सूचना:' : 'Data Notice:'}</strong> {lang === 'hi' ? 'सिंथेटिक फ़ील्ड (name_local, name_bank, ifsc) प्रकाशित मार्जिनल से मेल खाने के लिए अनुकरण किए गए हैं।' : 'Synthetic fields (name_local, name_bank, ifsc) are simulated to match published marginals.'}
+          <AlertTriangle className="text-blue-600 shrink-0 mt-0.5" size={18} />
+          <p className="text-sm text-blue-800 leading-relaxed">
+            <strong className="text-blue-900">{lang === 'hi' ? 'एआई सूचना:' : 'AI Notice:'}</strong> {lang === 'hi' ? 'ये अनुशंसाएं नागरिक मांग और जनसांख्यिकीय डेटा के एआई विश्लेषण पर आधारित हैं।' : 'These recommendations are based on AI analysis of aggregated citizen demand and demographic data.'}
           </p>
         </motion.div>
         
