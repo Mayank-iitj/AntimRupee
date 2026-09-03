@@ -48,13 +48,8 @@ class NREGAScraper(PaymentSource):
         data = []
         for i in range(5000):
             block = random.choice(blocks)
-            # biased error for Aurai
-            
-            # Guarantee exactly 2 LLM fallbacks to test the Gemini API without hitting the 5 RPM rate limit
-            if i in [15, 85]:
-                failure = "network failure at branch"
-            else:
-                failure = "aadhaar not mapped to iin" if block == "Aurai" and random.random() > 0.4 else random.choice(failures[:5])
+            # Use only regex-mapped failures to bypass exhausted Gemini Free Tier quota
+            failure = "aadhaar not mapped to iin" if block == "Aurai" and random.random() > 0.4 else random.choice(failures[:5])
                 
             days = int(np.random.normal(loc=25, scale=10))
             if days < 0: days = 5
