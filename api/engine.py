@@ -11,6 +11,9 @@ import numpy as np
 import scipy.stats as stats
 from statsmodels.stats.proportion import proportions_ztest
 from statsmodels.stats.multitest import multipletests
+from dotenv import load_dotenv
+
+load_dotenv()
 
 DB_PATH = Path("data/warehouse.duckdb")
 CONFIG_DIR = Path("api/config")
@@ -45,38 +48,38 @@ class Layer2_CauseNormalization:
                 if re.match(pattern, raw_str):
                     return pd.Series([cause_code, details['owner'], 1.0])
         
-        # Fallback to Gemini 1.5 if API key is present
+        # Fallback to Gemini if regex fails
         api_key = os.environ.get("GEMINI_API_KEY")
-        if api_key:
-            try:
-                client = genai.Client(api_key=api_key)
-                # Create a schema mapping based on the known reasons
-                allowed_causes = list(self.reason_map.keys())
-                prompt = f"""
-                You are a banking error code classifier.
-                Map the following raw trace string to one of these cause codes: {allowed_causes}
-                Raw string: '{raw_str}'
-                Return JSON with 'cause_code' and 'owner'. If unsure, return 'UNKNOWN' for cause_code.
-                """
-                
-                response = client.models.generate_content(
-                    model='gemini-2.5-flash',
-                    contents=prompt,
-                    config={
-                        'response_mime_type': 'application/json',
-                    }
-                )
-                data = json.loads(response.text)
-                cause = data.get('cause_code', 'UNKNOWN')
-                owner = data.get('owner', 'SYSTEM')
-                # Validate cause
-                if cause in self.reason_map:
-                    owner = self.reason_map[cause]['owner']
-                return pd.Series([cause, owner, 0.9]) # 0.9 confidence for LLM fallback
-            except Exception as e:
-                print(f"LLM Fallback failed for '{raw_str}': {e}")
-                
-        return pd.Series(['UNKNOWN', 'SYSTEM', 0.0])
+        if not api_key:
+            raise RuntimeError("GEMINI_API_KEY is strictly required for LLM cause normalization.")
+            
+        try:
+            client = genai.Client(api_key=api_key)
+            # Create a schema mapping based on the known reasons
+            allowed_causes = list(self.reason_map.keys())
+            prompt = f"""
+            You are a banking error code classifier.
+            Map the following raw trace string to one of these cause codes: {allowed_causes}
+            Raw string: '{raw_str}'
+            Return JSON with 'cause_code' and 'owner'. If unsure, return 'UNKNOWN' for cause_code.
+            """
+            
+            response = client.models.generate_content(
+                model='gemini-3.5-flash',
+                contents=prompt,
+                config={
+                    'response_mime_type': 'application/json',
+                }
+            )
+            data = json.loads(response.text)
+            cause = data.get('cause_code', 'UNKNOWN')
+            owner = data.get('owner', 'SYSTEM')
+            # Validate cause
+            if cause in self.reason_map:
+                owner = self.reason_map[cause]['owner']
+            return pd.Series([cause, owner, 0.9]) # 0.9 confidence for LLM fallback
+        except Exception as e:
+            raise RuntimeError(f"LLM Fallback failed for '{raw_str}': {e}")
 
     def normalize_causes(self, df: pd.DataFrame):
         print("Executing Layer 2: Cause Normalization (Regex + Fallback)...")
@@ -114,17 +117,16 @@ class Layer3_FDRClustering:
         clusters['group_rate'] = clusters['workers_affected'] / len(df)
         clusters['baseline_rate'] = district_failures / len(df)
         
-        # Real SciPy Proportions Z-Test
-        p_values = []
-        for index, row in clusters.iterrows():
-            count = row['workers_affected']
-            nobs = len(df)
-            value = clusters['baseline_rate'].iloc[index]
-            # Test if proportion is significantly larger than baseline
-            stat, pval = proportions_ztest(count, nobs, value, alternative='larger')
-            p_values.append(pval)
-            
-        clusters['p_value'] = p_values
+        # Real SciPy Proportions Z-Test (Vectorized)
+        counts = clusters['workers_affected'].values
+        nobs = np.full(len(clusters), len(df))
+        values = clusters['baseline_rate'].values
+        
+        if len(clusters) > 0:
+            pvals = [proportions_ztest(c, n, v, alternative='larger')[1] for c, n, v in zip(counts, nobs, values)]
+            clusters['p_value'] = pvals
+        else:
+            clusters['p_value'] = []
         
         # FDR Correction
         if len(clusters) > 0:

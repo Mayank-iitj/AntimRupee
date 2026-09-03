@@ -10,31 +10,31 @@ export default function Screen3() {
   const [selectedProject, setSelectedProject] = useState(null);
   const { lang } = useLanguage();
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    // Mock Data for Infrastructure Projects
-    setWorklist([
-      { id: 'PRJ-101', title: 'New Water Purification Plant', location: 'Nashik, Rural', category: 'Water Supply', score: 98, cost_est: '₹4.2 Cr', beneficiaries: 12500, status: 'urgent',
-        briefing: 'AI identifies a critical shortage of potable water in Nashik Rural based on 8,300 citizen voice notes expressing immediate need. PM Gati Shakti shows no planned water infrastructure within 20km.',
-        requests: [
-          { type: 'audio', text: 'पीने का पानी खारा आ रहा है।', lang: 'hi' },
-          { type: 'text', text: 'Water supply is irregular and contaminated.', lang: 'en' }
-        ]
-      },
-      { id: 'PRJ-102', title: 'Primary Healthcare Clinic Upgrade', location: 'Solapur, North', category: 'Healthcare', score: 92, cost_est: '₹1.5 Cr', beneficiaries: 8400, status: 'high',
-        briefing: 'Sentiment analysis of Telegram and WhatsApp messages shows severe distress regarding lack of emergency medical facilities in Solapur North. Nearest hospital is 45 mins away.',
-        requests: [
-          { type: 'audio', text: 'दवाखाना खूप लांब आहे, रात्री खूप त्रास होतो.', lang: 'mr' },
-          { type: 'text', text: 'Need a clinic nearby for emergencies.', lang: 'en' }
-        ]
-      },
-      { id: 'PRJ-103', title: 'Arterial Road Resurfacing', location: 'Pune, Ward 4', category: 'Road Repair', score: 87, cost_est: '₹8.0 Cr', beneficiaries: 35000, status: 'high',
-        briefing: 'High volume of image uploads and complaints about potholes causing accidents. Traffic data correlates with citizen feedback.',
-        requests: [
-          { type: 'text', text: 'Road is completely broken, everyday accidents happen.', lang: 'en' },
-          { type: 'audio', text: 'रस्ता खूप खराब झाला आहे.', lang: 'mr' }
-        ]
-      }
-    ]);
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/worklist`)
+      .then(res => res.json())
+      .then(data => {
+        const mapped = (data || []).map(d => ({
+          id: d.cluster_id,
+          title: `${d.cause_code} Resolution`,
+          location: d.dimension_value,
+          category: d.cause_code,
+          score: Math.round(d.priority * 100),
+          cost_est: `₹${((d.unpaid_total || 0) / 10000000).toFixed(2)} Cr`,
+          beneficiaries: d.workers_affected,
+          status: d.priority > 0.9 ? 'urgent' : 'high',
+          briefing: `AI identified a high priority issue regarding ${d.cause_code} in ${d.dimension_value}. Mean days pending: ${d.mean_days_pending}.`,
+          requests: []
+        }));
+        setWorklist(mapped);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
   }, []);
 
   return (

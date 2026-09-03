@@ -6,6 +6,15 @@ PyYAML
 pandas
 numpy
 google-genai
+google-cloud-bigquery
+google-cloud-speech
+google-cloud-translate
+firebase-admin
 scipy
 statsmodels
 pyarrow
+beautifulsoup4
+requests
+lxml
+html5lib
+python-dotenv

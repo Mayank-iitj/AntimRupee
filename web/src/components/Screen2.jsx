@@ -118,13 +118,22 @@ const LiveDecoder = () => {
 export default function Screen2() {
   const { lang } = useLanguage();
   
-  const categories = [
-    { category: "Road Repair", count: 45200 },
-    { category: "Water Supply", count: 38100 },
-    { category: "Electricity", count: 21500 },
-    { category: "Healthcare", count: 12400 },
-    { category: "Education", count: 11253 }
-  ];
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/causes`)
+      .then(res => res.json())
+      .then(d => {
+        // Map the backend structure to the frontend expectation
+        setCategories((d || []).map(item => ({ category: item.cause_code, count: item.count })));
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
 
   const colors = ['#7584D6', '#80E5FF', '#A5A4FA', '#06b6d4', '#3b82f6'];
 

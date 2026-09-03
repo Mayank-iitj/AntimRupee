@@ -9,20 +9,21 @@ export default function Screen1() {
   const { lang } = useLanguage();
 
   useEffect(() => {
-    // Mock Data for Demand Heatmap
-    setData({
-      total_requests: 128453,
-      processed: 110200,
-      high_priority: 15400,
-      critical_hotspots: 43,
-      regions: [
-        { id: "Pune, MH", requests: 12400 },
-        { id: "Nashik, MH", requests: 8300 },
-        { id: "Nagpur, MH", requests: 7500 },
-        { id: "Solapur, MH", requests: 6200 },
-        { id: "Amravati, MH", requests: 4100 },
-      ]
-    });
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/summary`)
+      .then(res => res.json())
+      .then(d => {
+        setData({
+          total_requests: d.workers_flagged || 0,
+          processed: d.workers_flagged || 0,
+          high_priority: Math.floor((d.workers_flagged || 0) * 0.1),
+          critical_hotspots: d.blocks ? d.blocks.length : 0,
+          regions: (d.blocks || []).map(b => ({ id: b.block_id, requests: b.c }))
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        setError(err);
+      });
   }, []);
 
   if (!data) return (
