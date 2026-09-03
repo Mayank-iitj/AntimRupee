@@ -44,7 +44,7 @@ export default function Terms() {
 
           <h3>4. AI and Machine Learning Fallbacks</h3>
           <p>
-            The Service utilizes large language models (such as Gemini 1.5 Pro) to decode unstructured banking error traces. While our deterministic engines guarantee 91% coverage, AI fallbacks are used for edge cases. Users should review AI-generated case briefings for accuracy before taking legal or administrative action.
+            The Service utilizes large language models (such as Gemini 3.5 Pro) to decode unstructured banking error traces. While our deterministic engines guarantee 91% coverage, AI fallbacks are used for edge cases. Users should review AI-generated case briefings for accuracy before taking legal or administrative action.
           </p>
 
           <h3>5. Limitation of Liability</h3>

@@ -44,7 +44,7 @@ const LiveDecoder = () => {
       <div className="bg-[#1E293B] px-4 py-3 border-b border-gray-800 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Terminal size={16} className="text-gray-400" />
-          <span className="text-sm font-semibold text-gray-200">Cloud STT + Gemini 1.5 Pro // Live Ingestion Stream</span>
+          <span className="text-sm font-semibold text-gray-200">Cloud STT + Gemini 3.5 Pro // Live Ingestion Stream</span>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />

@@ -313,7 +313,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
             {[
               { step: 1, icon: Mic, title: "Multilingual Ingestion", desc: "Citizens submit text/voice requests via WhatsApp, Telegram, or Web. Cloud Speech-to-Text transcribes regional languages." },
-              { step: 2, icon: Activity, title: "AI Translation & Extraction", desc: "Gemini 1.5 Pro translates requests and extracts location and intent (e.g. 'Road Repair'), while Vertex AI Vision analyzes uploaded photos." },
+              { step: 2, icon: Activity, title: "AI Translation & Extraction", desc: "Gemini 3.5 Pro translates requests and extracts location and intent (e.g. 'Road Repair'), while Vertex AI Vision analyzes uploaded photos." },
               { step: 3, icon: Layers, title: "Data Aggregation", desc: "Requests are cross-referenced with Census data and PM Gati Shakti infrastructure plans in BigQuery." },
               { step: 4, icon: MapPin, title: "Recommendation", desc: "Policymakers view demand heatmaps via Google Maps Platform and AI-prioritized project recommendations for optimal spending." }
             ].map((item, i) => (
@@ -439,7 +439,7 @@ export default function Home() {
           
           <div className="border-t border-gray-200">
             <FAQItem question="How do you handle multiple languages?" answer="We use state-of-the-art multilingual models (like Google Cloud Speech-to-Text and Translation API) to transcribe voice notes and translate text from regional languages into a unified format for analysis." />
-            <FAQItem question="How do you prevent duplicate requests?" answer="We use Gemini 1.5 Pro for entity extraction and geospatial clustering (via BigQuery) to identify similar requests from the same locality, merging them into 'demand hotspots'." />
+            <FAQItem question="How do you prevent duplicate requests?" answer="We use Gemini 3.5 Pro for entity extraction and geospatial clustering (via BigQuery) to identify similar requests from the same locality, merging them into 'demand hotspots'." />
             <FAQItem question="Can this integrate with existing state dashboards?" answer="Yes. Antim Rupee provides a rich API that allows state governments to pull localized heatmaps and recommendations directly into their existing planning tools." />
             <FAQItem question="How does the Recommendation Engine work?" answer="Vertex AI models assign priority scores based on request volume, severity of the issue, and alignment with existing budget and infrastructure gaps." />
           </div>

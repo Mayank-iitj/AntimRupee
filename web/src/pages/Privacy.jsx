@@ -37,7 +37,7 @@ export default function Privacy() {
 
           <h3>2. How We Use the Data</h3>
           <p>
-            Data is strictly used for the resolution of silent exclusions. The platform utilizes AI models (including Gemini 1.5 Pro) to analyze raw trace logs. 
+            Data is strictly used for the resolution of silent exclusions. The platform utilizes AI models (including Gemini 3.5 Pro) to analyze raw trace logs. 
             <strong> Important:</strong> All PII (Personally Identifiable Information) is anonymized and stripped before any unstructured error logs are sent to the LLM decoding layer.
           </p>
 
