@@ -98,7 +98,7 @@ def get_causes(geo: Optional[str] = None, period: Optional[str] = None):
         if 'conn' in locals(): conn.close()
 
 @app.get("/api/worklist")
-def get_worklist(weights: Optional[str] = None, status: str = "open", limit: int = 50):
+def get_worklist(weights: Optional[str] = None, status: str = "open", limit: int = 100):
     try:
         conn = get_db(read_only=True)
         data = conn.execute("SELECT cluster_id, dimension_value, priority, workers_affected, unpaid_total, mean_days_pending, cause_code, group_rate, baseline_rate FROM cluster_action WHERE status = ? ORDER BY priority DESC LIMIT ?", [status, limit]).fetchall()

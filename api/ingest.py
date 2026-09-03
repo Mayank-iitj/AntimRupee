@@ -46,7 +46,7 @@ class NREGAScraper(PaymentSource):
         
         import random
         data = []
-        for i in range(100):
+        for i in range(5000):
             block = random.choice(blocks)
             # biased error for Aurai
             
