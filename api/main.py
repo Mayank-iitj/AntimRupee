@@ -26,26 +26,17 @@ app.add_middleware(
 
 # --- GOOGLE CLOUD INTEGRATION ---
 import google.auth
-from google.cloud import bigquery
 from google import genai
 from google.genai import types
 
 # Initialize clients (will fail gracefully if no credentials found locally)
 try:
-    bq_client = bigquery.Client()
     genai_client = genai.Client()
 except Exception as e:
     print(f"Failed to initialize Google Cloud clients: {e}")
     raise RuntimeError(f"Google Cloud clients required: {e}")
 
-def execute_bigquery(query: str):
-    """Executes a query against BigQuery."""
-    try:
-        query_job = bq_client.query(query)
-        results = query_job.result()
-        return [dict(row) for row in results]
-    except Exception as e:
-        raise Exception(f"BigQuery Error: {e}")
+
 
 def call_gemini(system_prompt: str, user_prompt: str, is_json: bool = False):
     """Calls Gemini 1.5 Pro."""
