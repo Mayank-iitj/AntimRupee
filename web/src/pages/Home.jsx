@@ -236,10 +236,10 @@ export default function Home() {
             </motion.p>
 
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 0.8}} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
-              <MagneticButton onClick={handleLaunchDashboard} className="w-full sm:w-auto px-8 py-4 bg-primary rounded-full text-white font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 group hover:shadow-[0_20px_25px_-5px_rgba(117,132,214,0.4)]">
+              <MagneticButton onClick={() => navigate('/demo')} className="w-full sm:w-auto px-8 py-4 bg-primary rounded-full text-white font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 group hover:shadow-[0_20px_25px_-5px_rgba(117,132,214,0.4)]">
                 {lang === 'hi' 
-                  ? (isAuthenticated ? "डैशबोर्ड दर्ज करें" : "डैशबोर्ड लॉन्च करें") 
-                  : (isAuthenticated ? "Enter Dashboard" : "View Heatmaps")} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                  ? "इंटरैक्टिव डेमो देखें" 
+                  : "View Interactive Demo"} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
               <MagneticButton onClick={() => scrollToSection('how-it-works')} className="w-full sm:w-auto px-8 py-4 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold shadow-sm flex items-center justify-center gap-2 transition-colors hover:bg-gray-50">
                 {lang === 'hi' ? "यह कैसे काम करता है" : "How it Works"}
@@ -247,7 +247,7 @@ export default function Home() {
             </motion.div>
             
             <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 1.2}} className="mt-8 text-sm text-gray-500 font-medium flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-green-500" /> <span className="text-primary font-bold"><CountUp to={128453} duration={2}/></span> requests mapped this month
+              <CheckCircle2 size={16} className="text-green-500" /> <span className="font-medium">Demo data:</span> <span className="text-primary font-bold"><CountUp to={69578} duration={2}/></span> simulated requests
             </motion.div>
           </div>
         </motion.div>
@@ -337,8 +337,8 @@ export default function Home() {
           </div>
 
           <div className="mt-16 text-center relative z-10">
-            <MagneticButton onClick={handleLaunchDashboard} className="px-8 py-4 bg-gray-900 rounded-full text-white font-medium shadow-xl inline-flex items-center gap-2">
-              View Heatmaps <ArrowRight size={18} />
+            <MagneticButton onClick={() => navigate('/demo')} className="px-8 py-4 bg-gray-900 rounded-full text-white font-medium shadow-xl inline-flex items-center gap-2">
+              Try the Interactive Demo <ArrowRight size={18} />
             </MagneticButton>
           </div>
         </div>
@@ -410,11 +410,11 @@ export default function Home() {
               },
               {
                 title: "Google Maps",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1">Google Maps</div>
+                node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1 relative group">Google Maps<span className="absolute -bottom-6 text-[10px] text-gray-400 font-normal opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Live in demo</span></div>
               },
               {
                 title: "Vertex AI",
-                node: <div className="flex items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1">Vertex AI</div>
+                node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 text-[#4285F4] font-bold text-xl hover:text-blue-500 transition-colors hover:shadow-md hover:-translate-y-1 relative group">Vertex AI<span className="absolute -bottom-6 text-[10px] text-gray-400 font-normal opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Live in demo</span></div>
               },
             ]}
             speed={60}

@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import Demo from './pages/Demo';
 import './index.css';
 
 import ApiDocs from './pages/ApiDocs';
@@ -37,6 +38,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
+                <Route path="demo" element={<Demo />} />
                 <Route 
                   path="dashboard" 
                   element={

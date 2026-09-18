@@ -159,7 +159,7 @@ export default function Layout() {
                 antim<sup className="text-xl ml-1 font-normal opacity-80">®</sup>
               </div>
               <p className="text-white text-lg leading-snug max-w-xs font-light mt-2">
-                Empowering states to detect, analyze, and resolve stalled welfare payments instantly.
+                An AI-powered multilingual infrastructure demand layer for governments.
               </p>
             </div>
 
