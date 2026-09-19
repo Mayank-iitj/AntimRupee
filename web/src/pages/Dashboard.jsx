@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Map, BarChart3, ListTodo, AlertTriangle } from 'lucide-react';
+import { Map, BarChart3, ListTodo, AlertTriangle, Calculator } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import Screen1 from '../components/Screen1';
 import Screen2 from '../components/Screen2';
 import Screen3 from '../components/Screen3';
+import BudgetOptimizer from '../components/BudgetOptimizer';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('screen1');
@@ -15,6 +16,7 @@ export default function Dashboard() {
     { id: 'screen1', label: lang === 'hi' ? 'मांग हीटमैप' : 'Demand Heatmap', icon: Map },
     { id: 'screen2', label: lang === 'hi' ? 'श्रेणी विश्लेषण' : 'Category Analysis', icon: BarChart3 },
     { id: 'screen3', label: lang === 'hi' ? 'अनुशंसित परियोजनाएं' : 'Recommended Projects', icon: ListTodo },
+    { id: 'screen4', label: 'Budget Optimizer', icon: Calculator },
   ];
 
   return (
@@ -70,6 +72,7 @@ export default function Dashboard() {
             {activeTab === 'screen1' && <Screen1 />}
             {activeTab === 'screen2' && <Screen2 />}
             {activeTab === 'screen3' && <Screen3 />}
+            {activeTab === 'screen4' && <BudgetOptimizer />}
           </motion.div>
         </AnimatePresence>
       </main>

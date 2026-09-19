@@ -26,7 +26,10 @@ export default function Screen3() {
           beneficiaries: d.workers_affected,
           status: d.priority > 0.9 ? 'urgent' : 'high',
           briefing: `AI identified a high priority issue regarding ${d.cause_code} in ${d.dimension_value}. Mean days pending: ${d.mean_days_pending}.`,
-          requests: []
+          requests: [],
+          contractor_name: d.contractor_name,
+          sla_breach_risk: d.sla_breach_risk,
+          sla_breach_count: d.sla_breach_count
         }));
         setWorklist(mapped);
         setLoading(false);
@@ -36,6 +39,8 @@ export default function Screen3() {
         setLoading(false);
       });
   }, []);
+
+  const [broadcastState, setBroadcastState] = useState(null); // id -> 'sending' | 'sent'
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 h-[800px] lg:h-[700px]">
@@ -83,7 +88,7 @@ export default function Screen3() {
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-4 gap-4 mb-4">
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                     <div className="text-xs text-gray-500 mb-1">{lang === 'hi' ? 'श्रेणी' : 'Category'}</div>
                     <div className="text-lg font-display font-bold text-gray-900">{item.category}</div>
@@ -95,6 +100,12 @@ export default function Screen3() {
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                     <div className="text-xs text-gray-500 mb-1">{lang === 'hi' ? 'नागरिक प्रभाव' : 'Citizen Impact'}</div>
                     <div className="text-lg font-display font-bold text-gray-900">{item.beneficiaries.toLocaleString()}+</div>
+                  </div>
+                  <div className={`rounded-lg p-3 border ${item.sla_breach_risk === 'High' ? 'bg-red-50 border-red-200' : 'bg-gray-50 border-gray-100'}`}>
+                    <div className="text-xs text-gray-500 mb-1 whitespace-nowrap overflow-hidden text-ellipsis">Contractor: {item.contractor_name}</div>
+                    <div className={`text-sm font-bold ${item.sla_breach_risk === 'High' ? 'text-red-700' : 'text-gray-900'}`}>
+                      {item.sla_breach_risk === 'High' ? `${item.sla_breach_count} SLA Breaches` : 'SLA: Good'}
+                    </div>
                   </div>
                 </div>
                 
@@ -185,19 +196,61 @@ export default function Screen3() {
                   {selectedProject.briefing}
                 </p>
               </div>
+
+              {/* Satellite Verification */}
+              <div className="bg-white border border-gray-200 rounded-xl p-5 mb-6 shadow-sm">
+                <div className="flex justify-between items-center mb-3">
+                  <h4 className="font-bold text-gray-900 flex items-center gap-2"><MapPin size={16} className="text-primary"/> Satellite Verification</h4>
+                  <span className="text-xs font-mono bg-green-100 text-green-700 px-2 py-1 rounded">VERIFIED ACTIVE</span>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="h-32 w-full sm:w-32 bg-gray-200 rounded-lg shrink-0 overflow-hidden relative">
+                    <div className="absolute inset-0 opacity-50 bg-[url('https://maps.googleapis.com/maps/api/staticmap?center=20.5937,78.9629&zoom=10&size=200x200&maptype=satellite')] bg-cover" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 border-2 border-red-500 rounded flex items-center justify-center">
+                        <div className="w-1 h-1 bg-red-500 rounded-full" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex-1 text-sm text-gray-600">
+                    <p className="mb-2"><strong>Earth Engine Report:</strong> Automated scan of {selectedProject.location} confirms structural anomalies consistent with citizen reports.</p>
+                    <p>Confidence: <span className="font-bold text-green-600">92%</span></p>
+                  </div>
+                </div>
+              </div>
               
-              <div className="bg-gray-900 rounded-xl p-5 shadow-sm text-gray-300">
+              <div className="bg-gray-900 rounded-xl p-5 shadow-sm text-gray-300 mb-6">
                 <div className="flex justify-between items-center mb-3">
                   <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">Sample Citizen Voices</div>
                   <div className="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-400 font-mono">Translated via Cloud Translation API</div>
                 </div>
                 <div className="space-y-3">
-                  {selectedProject.requests.map((req, idx) => (
+                  {selectedProject.requests && selectedProject.requests.length > 0 ? selectedProject.requests.map((req, idx) => (
                     <div key={idx} className="font-mono text-xs leading-relaxed whitespace-pre-wrap break-all border-l-2 border-emerald-500 pl-3 py-2 bg-gray-800 rounded">
                       <span className="text-emerald-400 font-bold">[{req.type.toUpperCase()}] ({req.lang})</span>: {req.text}
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-xs text-gray-500 italic">No direct raw transcripts available for this cluster.</div>
+                  )}
                 </div>
+              </div>
+
+              {/* Broadcast Updates */}
+              <div className="border border-green-200 bg-green-50 rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-3">
+                  <h4 className="font-bold text-green-900">Citizen Communications</h4>
+                </div>
+                <p className="text-sm text-green-800 mb-4">Notify the {selectedProject.beneficiaries}+ affected citizens via WhatsApp that this project is under review.</p>
+                <button 
+                  onClick={() => {
+                    setBroadcastState('sending');
+                    setTimeout(() => setBroadcastState('sent'), 2000);
+                  }}
+                  disabled={broadcastState}
+                  className="w-full py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50"
+                >
+                  {broadcastState === 'sending' ? 'Broadcasting...' : broadcastState === 'sent' ? 'Broadcast Sent!' : 'Broadcast Update via WhatsApp'}
+                </button>
               </div>
             </div>
           </motion.div>

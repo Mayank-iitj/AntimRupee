@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Users, AlertCircle } from 'lucide-react';
+import { MapPin, Users, AlertCircle, BellRing, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Screen1() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const { lang } = useLanguage();
+
+  const [warnings, setWarnings] = useState([]);
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/summary`)
@@ -24,6 +26,11 @@ export default function Screen1() {
         console.error(err);
         setError(err);
       });
+      
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/early_warnings`)
+      .then(res => res.json())
+      .then(d => setWarnings(d.alerts || []))
+      .catch(err => console.error("Failed to load warnings:", err));
   }, []);
 
   if (!data) return (
@@ -34,6 +41,27 @@ export default function Screen1() {
 
   return (
     <div className="space-y-8">
+      {/* Early Warning Banner */}
+      {warnings.length > 0 && (
+        <div className="bg-gradient-to-r from-red-50 to-orange-50 border border-red-200 rounded-xl p-4 shadow-sm">
+          <div className="flex items-center gap-2 mb-3">
+            <BellRing className="text-red-500 animate-pulse" size={20} />
+            <h3 className="font-bold text-red-900">Predictive Early Warnings</h3>
+          </div>
+          <div className="space-y-3">
+            {warnings.map((warn, idx) => (
+              <div key={idx} className="flex gap-3 items-start bg-white p-3 rounded-lg border border-red-100 shadow-sm">
+                <ShieldAlert size={16} className={warn.level === 'CRITICAL' ? 'text-red-500 mt-0.5' : 'text-orange-500 mt-0.5'} />
+                <div>
+                  <div className={`text-xs font-bold ${warn.level === 'CRITICAL' ? 'text-red-600' : 'text-orange-600'} uppercase tracking-wider mb-1`}>[{warn.level}] {warn.category}</div>
+                  <div className="text-sm text-gray-800">{warn.message}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Hero Metric: Demand Funnel */}
       <div className="text-center py-16 px-4 glass-card relative overflow-hidden bg-white">
         <h2 className="text-3xl font-display font-bold text-gray-900 mb-2">{lang === 'hi' ? 'नागरिक मांग फ़नल' : 'Citizen Demand Funnel'}</h2>

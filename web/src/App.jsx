@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Demo from './pages/Demo';
+import InspectorApp from './pages/InspectorApp';
 import './index.css';
 
 import ApiDocs from './pages/ApiDocs';
@@ -39,6 +40,7 @@ function App() {
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="demo" element={<Demo />} />
+                <Route path="inspector" element={<InspectorApp />} />
                 <Route 
                   path="dashboard" 
                   element={

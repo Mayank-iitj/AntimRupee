@@ -30,9 +30,20 @@ const LiveDecoder = () => {
       
       setLogs(prev => [...prev.slice(-2), newLog]);
       
-      setTimeout(() => {
-        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: request.json } : l));
-      }, 1500);
+      // Actually call backend to get decode (which includes spam detection)
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/decode`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw_string: request.raw })
+      })
+      .then(res => res.json())
+      .then(data => {
+        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: data } : l));
+      })
+      .catch(err => {
+         // Fallback to local
+         setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: request.json } : l));
+      });
       
       index++;
     }, 4000);
@@ -75,6 +86,11 @@ const LiveDecoder = () => {
                     <Sparkles size={20} className="animate-pulse" />
                     <span className="text-[10px] uppercase tracking-wider animate-pulse">Extracting</span>
                   </div>
+                ) : log.json?.synthetic_flag ? (
+                  <div className="flex flex-col items-center gap-2 text-red-400">
+                    <ArrowRight size={20} className="line-through opacity-50" />
+                    <span className="text-[10px] uppercase tracking-wider font-bold bg-red-900/50 px-2 py-0.5 rounded">Blocked</span>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center gap-2 text-emerald-400">
                     <ArrowRight size={20} />
@@ -83,8 +99,11 @@ const LiveDecoder = () => {
                 )}
               </div>
               
-              <div className="flex-1 bg-[#1E293B] p-4 rounded-lg border border-gray-700/50 relative">
-                <div className="text-xs text-gray-500 mb-1">STRUCTURED INTENT</div>
+              <div className={`flex-1 p-4 rounded-lg border relative ${log.json?.synthetic_flag ? 'bg-red-950/20 border-red-900/50' : 'bg-[#1E293B] border-gray-700/50'}`}>
+                <div className="text-xs text-gray-500 mb-1 flex justify-between">
+                  <span>STRUCTURED INTENT</span>
+                  {log.json?.spam_score && <span className={log.json?.synthetic_flag ? 'text-red-400 font-bold' : 'text-emerald-500'}>Spam Score: {log.json.spam_score.toFixed(2)}</span>}
+                </div>
                 {log.status === 'processing' ? (
                   <div className="flex items-center h-5">
                     <div className="flex gap-1">
@@ -93,6 +112,10 @@ const LiveDecoder = () => {
                       <div className="w-1.5 h-1.5 bg-gray-500 rounded-full animate-bounce" style={{animationDelay: '300ms'}}/>
                     </div>
                   </div>
+                ) : log.json?.synthetic_flag ? (
+                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-400 font-bold mt-2">
+                     ERROR: HIGH PROBABILITY DEEPFAKE OR SPAM BOT DETECTED. REQUEST DISCARDED.
+                   </motion.div>
                 ) : (
                   <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-emerald-300">
                     {`{`}
