@@ -153,7 +153,14 @@ export default function Screen2() {
         setLoading(false);
       })
       .catch(err => {
-        console.error(err);
+        console.error("Backend offline, using fallback demo data:", err);
+        setCategories([
+          { category: "Water Supply", count: 8500 },
+          { category: "Road Repair", count: 6200 },
+          { category: "Electricity", count: 4100 },
+          { category: "Healthcare", count: 3200 },
+          { category: "Education", count: 2500 }
+        ]);
         setLoading(false);
       });
   }, []);

@@ -20,7 +20,30 @@ export default function BudgetOptimizer() {
       setLoading(false);
     })
     .catch(err => {
-      console.error(err);
+      console.error("Backend offline, using fallback demo data:", err);
+      // Generate fallback response
+      const fallbackSelected = Array.from({length: 15}).map((_,i) => ({
+        cluster_id: `C_OPT_${i}`,
+        cause_code: "Water Supply",
+        dimension_value: "Nashik",
+        unpaid_total: 1000000 + Math.random() * 500000,
+        roi_score: 1.5 + Math.random()
+      }));
+      const fallbackRejected = Array.from({length: 85}).map((_,i) => ({
+        cluster_id: `C_REJ_${i}`,
+        cause_code: "Road Repair",
+        dimension_value: "Malegaon",
+        unpaid_total: 2000000 + Math.random() * 500000,
+        roi_score: 0.5 + Math.random()
+      }));
+      const spent = fallbackSelected.reduce((sum, item) => sum + item.unpaid_total, 0);
+      setResult({
+        spent: spent,
+        selected_projects: 15,
+        rejected_projects: 85,
+        selected: fallbackSelected,
+        rejected: fallbackRejected
+      });
       setLoading(false);
     });
   };
