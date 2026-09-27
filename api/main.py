@@ -42,7 +42,7 @@ def call_gemini(system_prompt: str, user_prompt: str, is_json: bool = False):
     """Calls Gemini 1.5 Pro."""
     
     try:
-        model = "gemini-3.5-pro"
+        model = "gemini-1.5-pro"
         config = types.GenerateContentConfig(
             system_instruction=system_prompt,
             response_mime_type="application/json" if is_json else "text/plain",
@@ -194,6 +194,39 @@ def decode_string(req: DecodeRequest):
             "spam_score": 0.95 if is_spam else 0.05,
             "synthetic_flag": is_spam
         }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ChatRequest(BaseModel):
+    message: str
+    history: List[dict] = []
+
+@app.post("/api/chat")
+def chat_bot(req: ChatRequest):
+    try:
+        system_prompt = """You are the official Antim Rupee Government AI Assistant. 
+You speak in a mix of Hindi (written in Latin script/Hinglish) and English. 
+Your goal is to collect citizen grievances regarding public infrastructure (water supply, roads, electricity, hospitals).
+- Always be extremely polite and professional.
+- If the user greets you, welcome them and ask for their issue.
+- If the user provides an issue without a location (village, ward, district, or landmark), ask them for the exact location so you can route it to the PWD or respective department.
+- If the user provides both issue and location, confirm that it has been verified and mapped to the Live Dashboard. Give them a random 4-digit Complaint ID (e.g., #AR-1234).
+- Keep responses short, exactly like a WhatsApp message. Use emojis like 📋, 📍, 🎫 where appropriate."""
+
+        context = ""
+        for msg in req.history[-4:]: 
+            role = "User" if msg.get("role") == "user" else "Bot"
+            context += f"{role}: {msg.get('text')}\n"
+            
+        user_prompt = f"Chat history:\n{context}\nUser: {req.message}\nBot:"
+        
+        try:
+            reply = call_gemini(system_prompt, user_prompt)
+        except Exception as api_e:
+            print(f"Gemini call failed: {api_e}")
+            reply = "🙏 Namaste! (Fallback Mode: API Key missing or invalid model). Aapki samasya record kar li gayi hai aur Ticket #AR-DEMO assign ho gaya hai."
+            
+        return {"reply": reply.strip()}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

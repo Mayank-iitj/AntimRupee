@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, BarChart3, ListTodo, AlertTriangle, Calculator } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -6,6 +6,33 @@ import Screen1 from '../components/Screen1';
 import Screen2 from '../components/Screen2';
 import Screen3 from '../components/Screen3';
 import BudgetOptimizer from '../components/BudgetOptimizer';
+
+function EarlyWarnings() {
+  const [alerts, setAlerts] = useState([]);
+  
+  useEffect(() => {
+    fetch('http://127.0.0.1:8000/api/early_warnings')
+      .then(res => res.json())
+      .then(data => setAlerts(data.alerts || []))
+      .catch(() => {});
+  }, []);
+
+  if (alerts.length === 0) return null;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      {alerts.map((a, i) => (
+        <motion.div key={i} initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} transition={{delay: i*0.1}} className={`p-4 rounded-xl shadow-sm border ${a.level === 'CRITICAL' ? 'bg-red-50 border-red-200' : 'bg-orange-50 border-orange-200'} flex items-start gap-3`}>
+          <AlertTriangle className={`shrink-0 mt-0.5 ${a.level === 'CRITICAL' ? 'text-red-600' : 'text-orange-500'}`} />
+          <div>
+            <h4 className={`text-sm font-bold ${a.level === 'CRITICAL' ? 'text-red-900' : 'text-orange-900'} mb-1`}>{a.category}</h4>
+            <p className={`text-sm ${a.level === 'CRITICAL' ? 'text-red-800' : 'text-orange-800'}`}>{a.message}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('screen1');
@@ -60,6 +87,8 @@ export default function Dashboard() {
             <strong className="text-blue-900">{lang === 'hi' ? 'एआई सूचना:' : 'AI Notice:'}</strong> {lang === 'hi' ? 'ये अनुशंसाएं नागरिक मांग और जनसांख्यिकीय डेटा के एआई विश्लेषण पर आधारित हैं।' : 'These recommendations are based on AI analysis of aggregated citizen demand and demographic data.'}
           </p>
         </motion.div>
+        
+        <EarlyWarnings />
         
         <AnimatePresence mode="wait">
           <motion.div
