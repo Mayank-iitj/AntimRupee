@@ -4,7 +4,7 @@
 
   <p>
     <img src="https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Google Cloud" />
-    <img src="https://img.shields.io/badge/Gemini_1.5_Pro-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white" alt="Gemini" />
+    <img src="https://img.shields.io/badge/Gemini_3.5-8E75B2?style=for-the-badge&logo=googlebard&logoColor=white" alt="Gemini" />
     <img src="https://img.shields.io/badge/Vertex_AI-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white" alt="Vertex AI" />
     <img src="https://img.shields.io/badge/BigQuery-669DF6?style=for-the-badge&logo=google-cloud&logoColor=white" alt="BigQuery" />
   </p>
@@ -28,7 +28,7 @@ The system analyzes large datasets combining citizen feedback with national demo
 | Feature | Description |
 | :--- | :--- |
 | 🎙️ **Multilingual Ingestion** | **Cloud Speech-to-Text** & **Translation API** transcribe and normalize citizen voices from WhatsApp, Telegram, and Web. |
-| 🧠 **AI Extraction & Vision** | **Gemini 1.5 Pro** and **Vertex AI Vision** extract intent (e.g., Road Repair) and validate citizen photos of infrastructure issues. |
+| 🧠 **AI Extraction & Vision** | **Gemini 3.5** and **Vertex AI Vision** extract intent (e.g., Road Repair) and validate citizen photos of infrastructure issues. |
 | 🗺️ **Demand Heatmaps** | Aggregates and visualizes citizen demand across districts using **Google Maps Platform** and **Earth Engine**. |
 | 📋 **Predictive Project Recommendations** | **Vertex AI (AutoML)** and **BigQuery** cross-reference demand with public data (Census, Gati Shakti) to forecast and recommend optimal infrastructure projects. |
 

@@ -16,7 +16,7 @@ graph TD
     subgraph Intelligence Engine
         RawStore --> |Event Trigger| CloudRun[Cloud Run Pipeline]
         CloudRun --> Vision[Vertex AI Vision]
-        CloudRun --> Gemini[Gemini 1.5 Pro]
+        CloudRun --> Gemini[Gemini 3.5]
         
         Vision -.-> |Crop Disease, Broken Roads| Context[Visual Context]
         Gemini --> |NER & Sentiment| Intent[Categorized Demand]
@@ -42,7 +42,7 @@ graph TD
 Voice notes and texts are captured via messaging webhooks backed by **Cloud Functions**. **Cloud Speech-to-Text** (optimized for Indian dialects) and the **Translation API** normalize all inputs into structured English base text while preserving the original intent.
 
 ## Layer 2: Multimodal AI Extraction
-**Gemini 1.5 Pro** performs entity extraction (location, infrastructure type, urgency). If the citizen uploaded photos (e.g., a broken water pipe), **Vertex AI Vision** validates the claim and severity.
+**Gemini 3.5** performs entity extraction (location, infrastructure type, urgency). If the citizen uploaded photos (e.g., a broken water pipe), **Vertex AI Vision** validates the claim and severity.
 
 ## Layer 3: Geospatial & Predictive Aggregation
 Normalized demands are stored in **BigQuery**. We join this unstructured demand with public datasets (Census, PM Gati Shakti) and satellite imagery via **Google Earth Engine**. **Vertex AI AutoML** is used to build predictive models that forecast future infrastructure demands based on historical hotspots.

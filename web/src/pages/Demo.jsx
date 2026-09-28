@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import WhatsAppSimulator from '../components/WhatsAppSimulator';
+import TelegramSimulator from '../components/TelegramSimulator';
 import GlobeVisualizer from '../components/GlobeVisualizer';
 import ProposalGenerator from '../components/ProposalGenerator';
 import { ArrowRight, Bot, Cpu, Database } from 'lucide-react';
 
 export default function Demo() {
   const [pipelineStep, setPipelineStep] = useState(0);
+  const [activeSimulator, setActiveSimulator] = useState('whatsapp');
 
   const handleMessageSent = (msg) => {
     // Trigger pipeline animation
@@ -50,15 +52,37 @@ export default function Demo() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left: Input (WhatsApp) */}
+          {/* Left: Input (WhatsApp/Telegram) */}
           <motion.div 
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.3 }}
-            className="lg:col-span-4 flex justify-center lg:justify-end relative"
+            className="lg:col-span-4 flex flex-col items-center lg:items-end justify-center relative"
           >
-            <div className="absolute -inset-4 bg-gradient-to-r from-green-500/10 to-emerald-500/10 blur-2xl rounded-full" />
-            <WhatsAppSimulator onMessageSent={handleMessageSent} />
+            <div className={`absolute -inset-4 blur-2xl rounded-full transition-colors duration-500 ${activeSimulator === 'whatsapp' ? 'bg-gradient-to-r from-green-500/10 to-emerald-500/10' : 'bg-gradient-to-r from-blue-500/10 to-cyan-500/10'}`} />
+            
+            <div className="flex gap-2 mb-6 z-20 bg-gray-900 p-1 rounded-full border border-gray-800 shadow-xl self-center lg:self-end w-[360px] justify-center">
+               <button 
+                 onClick={() => setActiveSimulator('whatsapp')} 
+                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all flex-1 ${activeSimulator === 'whatsapp' ? 'bg-[#128C7E] text-white shadow-md' : 'text-gray-400 hover:text-gray-200'}`}
+               >
+                 WhatsApp
+               </button>
+               <button 
+                 onClick={() => setActiveSimulator('telegram')} 
+                 className={`px-6 py-2 rounded-full text-sm font-bold transition-all flex-1 ${activeSimulator === 'telegram' ? 'bg-[#3390EC] text-white shadow-md' : 'text-gray-400 hover:text-gray-200'}`}
+               >
+                 Telegram
+               </button>
+            </div>
+
+            <div className="relative z-10 w-full flex justify-center lg:justify-end">
+              {activeSimulator === 'whatsapp' ? (
+                <WhatsAppSimulator onMessageSent={handleMessageSent} />
+              ) : (
+                <TelegramSimulator onMessageSent={handleMessageSent} />
+              )}
+            </div>
           </motion.div>
 
           {/* Middle: Pipeline visualization */}
@@ -66,7 +90,7 @@ export default function Demo() {
              <PipelineNode 
                 active={pipelineStep >= 1} 
                 icon={<Bot size={28} />} 
-                title="Gemini 1.5 Pro" 
+                title="Gemini 3.5" 
                 desc="Intent & Sentiment Extraction" 
                 color="border-purple-500/50 bg-purple-500/10 text-purple-400 shadow-purple-500/20" 
              />

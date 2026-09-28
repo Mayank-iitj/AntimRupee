@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Image as ImageIcon, CheckCheck, User, MoreVertical, Mic, Paperclip } from 'lucide-react';
+import { Send, Image as ImageIcon, CheckCheck, User, MoreVertical, Mic, Paperclip, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
 
-export default function WhatsAppSimulator({ onMessageSent }) {
+export default function TelegramSimulator({ onMessageSent }) {
   const [messages, setMessages] = useState([
     { 
       text: "Namaste 🙏! Main Antim Rupee (Government of India) ka AI Sahayak hoon. Kripya apni samasya (problem) ya suzhaav (suggestion) darj karein.", 
@@ -116,7 +116,6 @@ export default function WhatsAppSimulator({ onMessageSent }) {
     setMessages(prev => [...prev, newMsg]);
     setInput("");
     
-    // Notify parent component to trigger dashboard animations
     if (onMessageSent) {
       onMessageSent(userMsgText);
     }
@@ -124,7 +123,6 @@ export default function WhatsAppSimulator({ onMessageSent }) {
     setIsTyping(true);
     
     try {
-      // Map UI state to API history array
       const history = messages.slice(1).map(m => ({
         role: m.sender === 'user' ? 'user' : 'model',
         text: m.text
@@ -160,51 +158,51 @@ export default function WhatsAppSimulator({ onMessageSent }) {
   };
 
   return (
-    <div className="w-full max-w-[360px] h-[600px] bg-[#E5DDD5] rounded-[2.5rem] overflow-hidden border-[12px] border-gray-900 shadow-2xl flex flex-col relative font-sans">
+    <div className="w-full max-w-[360px] h-[600px] bg-[#9BBCE3] rounded-[2.5rem] overflow-hidden border-[12px] border-gray-900 shadow-2xl flex flex-col relative font-sans">
       {/* Dynamic Island / Camera Cutout */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-900 rounded-b-xl z-20"></div>
 
       {/* Header */}
-      <div className="bg-[#075E54] text-white p-4 pt-8 flex items-center justify-between shadow-md z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative">
-            <User size={24} />
-            <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-[#075E54] rounded-full"></div>
+      <div className="bg-[#3390EC] text-white p-4 pt-8 flex items-center justify-between shadow-sm z-10">
+        <div className="flex items-center gap-2 w-full">
+          <ChevronLeft size={24} className="text-white cursor-pointer" />
+          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center relative overflow-hidden flex-shrink-0">
+             <User size={24} />
           </div>
-          <div>
-            <h3 className="font-bold text-sm flex items-center gap-1">
+          <div className="flex-1 overflow-hidden ml-1">
+            <h3 className="font-semibold text-[15px] flex items-center gap-1 leading-tight">
               Antim Rupee Gov AI 
-              <span className="inline-block w-3.5 h-3.5 bg-green-500 text-white rounded-full text-[9px] text-center leading-3 shadow-sm">✓</span>
+              <span className="text-[10px] bg-white/20 px-1 py-0.5 rounded text-white font-medium ml-1">bot</span>
             </h3>
-            <p className="text-[10px] text-green-100">{isTyping ? "typing..." : "Powered by Gemini 3.5"}</p>
+            <p className="text-[12px] text-blue-100">{isTyping ? "typing..." : "online"}</p>
+          </div>
+          <div className="flex gap-3">
+             <MoreVertical size={20} className="text-white cursor-pointer" />
           </div>
         </div>
-        <MoreVertical size={20} className="text-green-100" />
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')] bg-cover relative">
-        <div className="absolute inset-0 bg-white/40" /> {/* Overlay for readability */}
-        
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#9BBCE3] relative">
         <div className="flex justify-center relative z-10 mb-4">
-          <span className="bg-[#E1F3FB] text-gray-600 text-[10px] font-medium px-3 py-1 rounded-lg shadow-sm">
-            SECURE GOVERNMENT CHANNEL
+          <span className="bg-black/20 text-white text-[11px] font-medium px-3 py-1 rounded-full shadow-sm backdrop-blur-sm">
+            {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
           </span>
         </div>
 
         {messages.map((msg, idx) => (
           <motion.div 
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             key={idx} 
             className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} relative z-10`}
           >
-            <div className={`max-w-[85%] rounded-2xl p-2.5 px-3 shadow-sm relative ${msg.sender === 'user' ? 'bg-[#DCF8C6] rounded-br-sm' : 'bg-white rounded-bl-sm'}`}>
+            <div className={`max-w-[85%] rounded-[1.2rem] p-2.5 px-3 shadow-sm relative ${msg.sender === 'user' ? 'bg-[#EEFFDE] rounded-br-sm' : 'bg-white rounded-bl-sm'}`}>
               {msg.image && <img src={msg.image} alt="upload" className="w-full h-auto max-h-48 object-cover rounded-lg mb-2 border border-black/5" />}
-              <p className="text-gray-800 text-sm leading-snug whitespace-pre-wrap">{msg.text}</p>
+              <p className="text-gray-900 text-[15px] leading-snug whitespace-pre-wrap">{msg.text}</p>
               <div className="flex justify-end items-center gap-1 mt-1">
-                <span className="text-[10px] text-gray-500">{msg.time}</span>
-                {msg.sender === 'user' && <CheckCheck size={14} className="text-blue-500" />}
+                <span className={`text-[11px] ${msg.sender === 'user' ? 'text-[#43A160]' : 'text-gray-400'}`}>{msg.time}</span>
+                {msg.sender === 'user' && <CheckCheck size={14} className="text-[#43A160]" />}
               </div>
             </div>
           </motion.div>
@@ -219,7 +217,7 @@ export default function WhatsAppSimulator({ onMessageSent }) {
               exit={{ opacity: 0, scale: 0.9 }}
               className="flex justify-start relative z-10"
             >
-              <div className="bg-white rounded-2xl rounded-bl-sm p-3 shadow-sm flex items-center gap-1.5 w-16 h-10">
+              <div className="bg-white rounded-[1.2rem] rounded-bl-sm p-3 shadow-sm flex items-center gap-1.5 w-16 h-10">
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                 <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
@@ -232,38 +230,43 @@ export default function WhatsAppSimulator({ onMessageSent }) {
       </div>
 
       {/* Input Area */}
-      <form onSubmit={handleSend} className="bg-[#F0F2F5] p-2 flex gap-2 items-center relative z-10">
-        <div className="flex-1 bg-white rounded-full flex items-center px-2 py-1 shadow-sm border border-gray-200">
-          <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
-          <button type="button" onClick={() => fileInputRef.current?.click()} className="text-gray-500 p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <Paperclip size={20} />
-          </button>
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={isTyping || isRecording}
-            placeholder={isRecording ? "Listening..." : "Type your issue..."} 
-            className={`flex-1 bg-transparent px-2 py-2 text-sm text-black placeholder-gray-500 focus:outline-none disabled:opacity-50 ${isRecording ? 'animate-pulse text-red-500' : ''}`}
-          />
-        </div>
+      <form onSubmit={handleSend} className="bg-white p-2 flex gap-2 items-end relative z-10">
+        <button type="button" onClick={() => fileInputRef.current?.click()} className="text-gray-400 p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0 mb-0.5">
+          <Paperclip size={22} className="transform rotate-45" />
+        </button>
+        <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleImageUpload} />
+        
+        <textarea 
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isTyping || isRecording}
+          placeholder={isRecording ? "Listening..." : "Message"} 
+          rows={1}
+          className={`flex-1 bg-transparent px-1 py-3 text-[15px] text-black placeholder-gray-400 focus:outline-none disabled:opacity-50 resize-none self-center max-h-24 ${isRecording ? 'animate-pulse text-red-500' : ''}`}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSend(e);
+            }
+          }}
+        />
         
         {input.trim() ? (
           <button 
             type="submit" 
             disabled={isTyping}
-            className="p-3 rounded-full shadow-sm transition-colors bg-[#128C7E] text-white hover:bg-[#075E54]"
+            className="p-3 rounded-full text-[#3390EC] hover:bg-[#F4F4F5] transition-colors flex-shrink-0 mb-0.5"
           >
-            <Send size={18} className="ml-0.5" />
+            <Send size={24} />
           </button>
         ) : (
           <button 
             type="button" 
             onClick={startVoiceRecording}
             disabled={isTyping}
-            className={`p-3 rounded-full shadow-sm transition-colors ${isRecording ? 'bg-red-500 text-white animate-pulse' : 'bg-[#128C7E] text-white hover:bg-[#075E54]'}`}
+            className={`p-3 rounded-full transition-colors flex-shrink-0 mb-0.5 ${isRecording ? 'text-red-500 animate-pulse bg-red-50' : 'text-[#3390EC] hover:bg-[#F4F4F5]'}`}
           >
-            <Mic size={18} />
+            <Mic size={24} />
           </button>
         )}
       </form>

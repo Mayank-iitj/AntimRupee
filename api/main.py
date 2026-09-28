@@ -39,7 +39,7 @@ except Exception as e:
 
 
 def call_gemini(system_prompt: str, user_prompt: str, is_json: bool = False):
-    """Calls Gemini 1.5 Pro."""
+    """Calls Gemini 3.5."""
     
     try:
         model = "gemini-1.5-pro"
@@ -275,7 +275,7 @@ def upload_evidence(req: dict):
     try:
         image_data = base64.b64decode(image_b64)
         response = genai_client.models.generate_content(
-            model='gemini-3.5-flash',
+            model='gemini-1.5-flash',
             contents=[
                 types.Content(
                     role="user",

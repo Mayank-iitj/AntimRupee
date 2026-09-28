@@ -7,11 +7,13 @@ import Screen2 from '../components/Screen2';
 import Screen3 from '../components/Screen3';
 import BudgetOptimizer from '../components/BudgetOptimizer';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
+
 function EarlyWarnings() {
   const [alerts, setAlerts] = useState([]);
   
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/api/early_warnings')
+    fetch(`${API_BASE_URL}/early_warnings`)
       .then(res => res.json())
       .then(data => setAlerts(data.alerts || []))
       .catch(() => {});
