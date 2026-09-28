@@ -38,7 +38,7 @@ const LiveDecoder = () => {
       })
       .then(res => res.json())
       .then(data => {
-        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: data } : l));
+        setLogs(prev => prev.map(l => l.id === newLog.id ? { ...l, status: 'done', json: { ...request.json, spam_score: data.spam_score, synthetic_flag: data.synthetic_flag } } : l));
       })
       .catch(err => {
          // Fallback to local

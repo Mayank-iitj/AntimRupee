@@ -8,6 +8,7 @@ import LogoLoop from '../components/LogoLoop';
 
 import InfiniteSpiral from '../components/InfiniteSpiral';
 import ScrollVelocity from '../components/ScrollVelocity';
+import DomeGallery from '../components/DomeGallery';
 
 // 1. KPI Count-Up
 const CountUp = ({ to, duration = 2 }) => {
@@ -138,8 +139,8 @@ const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border-b border-gray-200">
-      <button 
-        onClick={() => setIsOpen(!isOpen)} 
+      <button
+        onClick={() => setIsOpen(!isOpen)}
         className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
       >
         <span className="text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors">{question}</span>
@@ -170,7 +171,7 @@ export default function Home() {
   const navigate = useNavigate();
   const { lang } = useLanguage();
   const { isAuthenticated } = useAuth();
-  
+
   // Parallax effects for dashboard
   const heroY = useTransform(scrollY, [0, 500], [0, 150]);
   const dashboardY = useTransform(scrollY, [0, 800], [100, -50]);
@@ -182,7 +183,7 @@ export default function Home() {
     target: containerRef,
     offset: ["start center", "end center"]
   });
-  
+
   // Interactive 3D tilt state for Dashboard
   const dashRef = useRef(null);
   const dashX = useMotionValue(0);
@@ -191,7 +192,7 @@ export default function Home() {
   const rotateDashY = useTransform(dashX, [-200, 200], [-5, 5]);
 
   function handleDashHover(e) {
-    if(!dashRef.current) return;
+    if (!dashRef.current) return;
     const rect = dashRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
@@ -221,52 +222,58 @@ export default function Home() {
       <main id="features" className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <motion.div style={{ y: heroY }} className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <div className="max-w-5xl mx-auto flex flex-col items-center">
-            
-            <motion.div initial={{opacity:0, scale:0.8}} animate={{opacity:1, scale:1}} transition={{duration: 0.5}} className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-6 flex items-center gap-2">
+
+            <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }} className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-6 flex items-center gap-2">
               <span className="w-8 h-[1px] bg-gray-300"></span> Digital Public Infrastructure <span className="w-8 h-[1px] bg-gray-300"></span>
             </motion.div>
 
-            <TextReveal 
+            <TextReveal
               text={lang === 'hi' ? "नागरिक की आवाज़ से ||PILL|| ||BR|| तक।" : "Map Citizen Voices to ||PILL|| ||BR|| Across India."}
               className="text-5xl lg:text-7xl font-display font-bold text-gray-900 tracking-tight leading-[1.15] mb-8"
             />
 
-            <motion.p initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 0.6, duration: 0.8}} className="text-lg lg:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.8 }} className="text-lg lg:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
               {lang === 'hi' ? "हम भारत के भाषाई क्षेत्रों में वॉयस, टेक्स्ट और मैसेजिंग ऐप के माध्यम से नागरिक विकास अनुरोधों को एकत्र करते हैं, जिससे नीति निर्माताओं को सार्वजनिक खर्च को संरेखित करने में मदद मिलती है।" : "We aggregate citizen development requests via voice, text, and messaging apps across India's linguistic regions, helping policymakers align public spending with real demand hotspots."}
             </motion.p>
 
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 0.8}} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }} className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto">
               <MagneticButton onClick={() => navigate('/demo')} className="w-full sm:w-auto px-8 py-4 bg-primary rounded-full text-white font-semibold transition-colors shadow-lg flex items-center justify-center gap-2 group hover:shadow-[0_20px_25px_-5px_rgba(117,132,214,0.4)]">
-                {lang === 'hi' 
-                  ? "इंटरैक्टिव डेमो देखें" 
+                {lang === 'hi'
+                  ? "इंटरैक्टिव डेमो देखें"
                   : "View Interactive Demo"} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </MagneticButton>
               <MagneticButton onClick={() => scrollToSection('how-it-works')} className="w-full sm:w-auto px-8 py-4 bg-white border border-gray-200 rounded-full text-gray-700 font-semibold shadow-sm flex items-center justify-center gap-2 transition-colors hover:bg-gray-50">
                 {lang === 'hi' ? "यह कैसे काम करता है" : "How it Works"}
               </MagneticButton>
             </motion.div>
-            
-            <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay: 1.2}} className="mt-8 text-sm text-gray-500 font-medium flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-green-500" /> <span className="font-medium">Demo data:</span> <span className="text-primary font-bold"><CountUp to={69578} duration={2}/></span> simulated requests
+
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2 }} className="mt-8 text-sm text-gray-500 font-medium flex items-center gap-2">
+              <CheckCircle2 size={16} className="text-green-500" /> <span className="font-medium">Demo data:</span> <span className="text-primary font-bold"><CountUp to={69578} duration={2} /></span> simulated requests
             </motion.div>
           </div>
         </motion.div>
 
+        <div className="max-w-7xl mx-auto px-6 relative z-10 mt-16 mb-24">
+          <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{delay: 1.4}} className="w-full h-[600px] md:h-[700px] relative overflow-hidden rounded-3xl border border-gray-200 shadow-2xl bg-white/50 backdrop-blur-xl">
+            <DomeGallery />
+          </motion.div>
+        </div>
+
         {/* Interactive 3D Parallax Dashboard */}
-        <motion.div 
+        <motion.div
           ref={dashRef}
           onMouseMove={handleDashHover}
           onMouseLeave={handleDashLeave}
-          style={{ 
-            y: dashboardY, 
-            rotateX: dashX.get() ? rotateDashX : dashboardRotateX, 
+          style={{
+            y: dashboardY,
+            rotateX: dashX.get() ? rotateDashX : dashboardRotateX,
             rotateY: rotateDashY,
-            scale: dashboardScale, 
-            perspective: 1200 
+            scale: dashboardScale,
+            perspective: 1200
           }}
           className="max-w-6xl mx-auto px-6 mt-20"
         >
-          <motion.div 
+          <motion.div
             whileHover={{ boxShadow: "0 40px 80px -12px rgba(0, 0, 0, 0.2)" }}
             className="rounded-2xl border border-white/60 bg-white/40 p-2 backdrop-blur-xl shadow-2xl relative overflow-hidden group cursor-pointer transition-shadow duration-500"
             onClick={handleLaunchDashboard}
@@ -278,18 +285,18 @@ export default function Home() {
                 <div className="w-3 h-3 rounded-full bg-[#27C93F]" />
               </div>
             </div>
-            
+
             <div className="h-[500px] bg-gray-50/90 rounded-b-xl overflow-hidden flex items-start justify-center">
-              <img 
-                src="/app-preview.png" 
-                alt="Action Queue Preview" 
+              <img
+                src="/app-preview.png"
+                alt="Action Queue Preview"
                 className="w-full h-full object-cover object-top"
                 draggable={false}
               />
             </div>
 
             <div className="absolute inset-0 z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-white/30 backdrop-blur-[2px]">
-              <motion.span 
+              <motion.span
                 initial={{ scale: 0.9, y: 10 }}
                 whileInView={{ scale: 1, y: 0 }}
                 className="px-8 py-4 bg-gray-900 rounded-full text-white font-medium shadow-2xl flex items-center gap-2"
@@ -304,12 +311,12 @@ export default function Home() {
       {/* How it Works - 4 Step Sequence */}
       <section id="how-it-works" className="py-24 relative z-20">
         <div className="max-w-7xl mx-auto px-6 relative">
-          
+
           <div className="text-center mb-20 relative z-10">
             <div className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-4">HOW IT WORKS</div>
             <h2 className="text-4xl font-display font-bold text-gray-900 mb-6">From Voice Note to Policy Action</h2>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative z-10">
             {[
               { step: 1, icon: Mic, title: "Multilingual Ingestion", desc: "Citizens submit text/voice requests via WhatsApp, Telegram, or Web. Cloud Speech-to-Text transcribes regional languages." },
@@ -317,7 +324,7 @@ export default function Home() {
               { step: 3, icon: Layers, title: "Data Aggregation", desc: "Requests are cross-referenced with Census data and PM Gati Shakti infrastructure plans in BigQuery." },
               { step: 4, icon: MapPin, title: "Recommendation", desc: "Policymakers view demand heatmaps via Google Maps Platform and AI-prioritized project recommendations for optimal spending." }
             ].map((item, i) => (
-              <motion.div 
+              <motion.div
                 key={item.step}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -370,7 +377,7 @@ export default function Home() {
       </section>
 
 
-      
+
       {/* Divider */}
       <div className="max-w-7xl mx-auto px-6"><div className="w-full h-[1px] bg-gradient-to-r from-transparent via-gray-200 to-transparent" /></div>
 
@@ -379,16 +386,16 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6 text-center mb-16">
           <div className="uppercase tracking-[0.2em] text-xs font-bold text-gray-500 mb-4">INTEGRATIONS</div>
           <h2 className="text-4xl md:text-5xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-gray-900 mb-6 leading-tight pb-2">
-            Powerful Integrations<br/>Made Simple
+            Powerful Integrations<br />Made Simple
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">Connect directly to citizen messaging platforms and government databases effortlessly.</p>
         </div>
-        
+
         {/* Infinite Marquee using LogoLoop */}
         <div className="py-8 w-full max-w-7xl mx-auto overflow-hidden relative opacity-90">
           <LogoLoop
             logos={[
-              { 
+              {
                 title: "WhatsApp",
                 node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 hover:shadow-md hover:-translate-y-1 transition-all"><img src="/whatsapp.svg" alt="WhatsApp" className="w-10 h-10 max-w-[40px] max-h-[40px] mb-1 object-contain" /><span className="text-xs font-bold text-[#25D366]">WhatsApp</span></div>
               },
@@ -404,7 +411,7 @@ export default function Home() {
                 title: "Census",
                 node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 hover:shadow-md hover:-translate-y-1 transition-all"><Database size={36} strokeWidth={1.5} className="mb-1 text-gray-800" /><span className="text-xs font-bold text-gray-800">Census</span></div>
               },
-              { 
+              {
                 title: "Gati Shakti",
                 node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 hover:shadow-md hover:-translate-y-1 transition-all"><Activity size={36} strokeWidth={1.5} className="mb-1 text-[#FF9933]" /><span className="text-xs font-bold text-gray-800">Gati Shakti</span></div>
               },
@@ -419,7 +426,7 @@ export default function Home() {
               {
                 title: "Vertex AI",
                 node: <div className="flex flex-col items-center justify-center w-32 h-24 rounded-3xl bg-white shadow-sm border border-gray-100/50 hover:shadow-md hover:-translate-y-1 transition-all relative group">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40px" height="40px" className="mb-1"><path d="M20,13.89A.77.77,0,0,0,19,13.73l-7,5.14v.22a.72.72,0,1,1,0,1.43v0a.74.74,0,0,0,.45-.15l7.41-5.47A.76.76,0,0,0,20,13.89Z" fill="#669df6"/><path d="M12,20.52a.72.72,0,0,1,0-1.43h0v-.22L5,13.73a.76.76,0,0,0-1,.16.74.74,0,0,0,.16,1l7.41,5.47a.73.73,0,0,0,.44.15v0Z" fill="#aecbfa"/><path d="M12,18.34a1.47,1.47,0,1,0,1.47,1.47A1.47,1.47,0,0,0,12,18.34Zm0,2.18a.72.72,0,1,1,.72-.71A.71.71,0,0,1,12,20.52Z" fill="#4285f4"/><path d="M6,6.11a.76.76,0,0,1-.75-.75V3.48a.76.76,0,1,1,1.51,0V5.36A.76.76,0,0,1,6,6.11Z" fill="#aecbfa"/><circle cx="5.98" cy="12" r="0.76" fill="#aecbfa"/><circle cx="5.98" cy="9.79" r="0.76" fill="#aecbfa"/><circle cx="5.98" cy="7.57" r="0.76" fill="#aecbfa"/><path d="M18,8.31a.76.76,0,0,1-.75-.76V5.67a.75.75,0,1,1,1.5,0V7.55A.75.75,0,0,1,18,8.31Z" fill="#4285f4"/><circle cx="18.02" cy="12.01" r="0.76" fill="#4285f4"/><circle cx="18.02" cy="9.76" r="0.76" fill="#4285f4"/><circle cx="18.02" cy="3.48" r="0.76" fill="#4285f4"/><path d="M12,15a.76.76,0,0,1-.75-.75V12.34a.76.76,0,0,1,1.51,0v1.89A.76.76,0,0,1,12,15Z" fill="#669df6"/><circle cx="12" cy="16.45" r="0.76" fill="#669df6"/><circle cx="12" cy="10.14" r="0.76" fill="#669df6"/><circle cx="12" cy="7.92" r="0.76" fill="#669df6"/><path d="M15,10.54a.76.76,0,0,1-.75-.75V7.91a.76.76,0,1,1,1.51,0V9.79A.76.76,0,0,1,15,10.54Z" fill="#4285f4"/><circle cx="15.01" cy="5.69" r="0.76" fill="#4285f4"/><circle cx="15.01" cy="14.19" r="0.76" fill="#4285f4"/><circle cx="15.01" cy="11.97" r="0.76" fill="#4285f4"/><circle cx="8.99" cy="14.19" r="0.76" fill="#aecbfa"/><circle cx="8.99" cy="7.92" r="0.76" fill="#aecbfa"/><circle cx="8.99" cy="5.69" r="0.76" fill="#aecbfa"/><path d="M9,12.73A.76.76,0,0,1,8.24,12V10.1a.75.75,0,1,1,1.5,0V12A.75.75,0,0,1,9,12.73Z" fill="#aecbfa"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40px" height="40px" className="mb-1"><path d="M20,13.89A.77.77,0,0,0,19,13.73l-7,5.14v.22a.72.72,0,1,1,0,1.43v0a.74.74,0,0,0,.45-.15l7.41-5.47A.76.76,0,0,0,20,13.89Z" fill="#669df6" /><path d="M12,20.52a.72.72,0,0,1,0-1.43h0v-.22L5,13.73a.76.76,0,0,0-1,.16.74.74,0,0,0,.16,1l7.41,5.47a.73.73,0,0,0,.44.15v0Z" fill="#aecbfa" /><path d="M12,18.34a1.47,1.47,0,1,0,1.47,1.47A1.47,1.47,0,0,0,12,18.34Zm0,2.18a.72.72,0,1,1,.72-.71A.71.71,0,0,1,12,20.52Z" fill="#4285f4" /><path d="M6,6.11a.76.76,0,0,1-.75-.75V3.48a.76.76,0,1,1,1.51,0V5.36A.76.76,0,0,1,6,6.11Z" fill="#aecbfa" /><circle cx="5.98" cy="12" r="0.76" fill="#aecbfa" /><circle cx="5.98" cy="9.79" r="0.76" fill="#aecbfa" /><circle cx="5.98" cy="7.57" r="0.76" fill="#aecbfa" /><path d="M18,8.31a.76.76,0,0,1-.75-.76V5.67a.75.75,0,1,1,1.5,0V7.55A.75.75,0,0,1,18,8.31Z" fill="#4285f4" /><circle cx="18.02" cy="12.01" r="0.76" fill="#4285f4" /><circle cx="18.02" cy="9.76" r="0.76" fill="#4285f4" /><circle cx="18.02" cy="3.48" r="0.76" fill="#4285f4" /><path d="M12,15a.76.76,0,0,1-.75-.75V12.34a.76.76,0,0,1,1.51,0v1.89A.76.76,0,0,1,12,15Z" fill="#669df6" /><circle cx="12" cy="16.45" r="0.76" fill="#669df6" /><circle cx="12" cy="10.14" r="0.76" fill="#669df6" /><circle cx="12" cy="7.92" r="0.76" fill="#669df6" /><path d="M15,10.54a.76.76,0,0,1-.75-.75V7.91a.76.76,0,1,1,1.51,0V9.79A.76.76,0,0,1,15,10.54Z" fill="#4285f4" /><circle cx="15.01" cy="5.69" r="0.76" fill="#4285f4" /><circle cx="15.01" cy="14.19" r="0.76" fill="#4285f4" /><circle cx="15.01" cy="11.97" r="0.76" fill="#4285f4" /><circle cx="8.99" cy="14.19" r="0.76" fill="#aecbfa" /><circle cx="8.99" cy="7.92" r="0.76" fill="#aecbfa" /><circle cx="8.99" cy="5.69" r="0.76" fill="#aecbfa" /><path d="M9,12.73A.76.76,0,0,1,8.24,12V10.1a.75.75,0,1,1,1.5,0V12A.75.75,0,0,1,9,12.73Z" fill="#aecbfa" /></svg>
                   <span className="text-xs font-bold text-[#4285F4]">Vertex AI</span>
                   <span className="absolute -bottom-6 text-[10px] text-gray-400 font-normal opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Live in demo</span>
                 </div>
@@ -444,7 +451,7 @@ export default function Home() {
             <h2 className="text-4xl font-display font-bold text-gray-900 mb-4">Burning Questions About Antim Rupee</h2>
             <p className="text-gray-500">Simple answers to make things clear.</p>
           </div>
-          
+
           <div className="border-t border-gray-200">
             <FAQItem question="How do you handle multiple languages?" answer="We use state-of-the-art multilingual models (like Google Cloud Speech-to-Text and Translation API) to transcribe voice notes and translate text from regional languages into a unified format for analysis." />
             <FAQItem question="How do you prevent duplicate requests?" answer="We use Gemini 3.5 Pro for entity extraction and geospatial clustering (via BigQuery) to identify similar requests from the same locality, merging them into 'demand hotspots'." />
@@ -457,8 +464,8 @@ export default function Home() {
       {/* ScrollVelocity Banner */}
       <section className="py-20 bg-gray-50 overflow-hidden text-[#7e8ddd] opacity-60">
         <ScrollVelocity
-          texts={['EMPOWERING CITIZENS • MAPPING DEMAND •', 'ANTIM RUPEE • INFRASTRUCTURE PRIORITIES •']} 
-          velocity={60} 
+          texts={['EMPOWERING CITIZENS • MAPPING DEMAND •', 'ANTIM RUPEE • INFRASTRUCTURE PRIORITIES •']}
+          velocity={60}
           className="font-display font-bold tracking-tight"
         />
       </section>

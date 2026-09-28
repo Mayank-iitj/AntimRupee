@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Users, AlertCircle, BellRing, ShieldAlert } from 'lucide-react';
+import ThoughtLine from './ThoughtLine';
 import { useLanguage } from '../contexts/LanguageContext';
 
 export default function Screen1() {
@@ -14,29 +15,33 @@ export default function Screen1() {
     fetch(`${import.meta.env.VITE_API_BASE_URL}/summary`)
       .then(res => res.json())
       .then(d => {
-        setData({
-          total_requests: d.workers_flagged || 0,
-          processed: d.workers_flagged || 0,
-          high_priority: Math.floor((d.workers_flagged || 0) * 0.1),
-          critical_hotspots: d.blocks ? d.blocks.length : 0,
-          regions: (d.blocks || []).map(b => ({ id: b.block_id, requests: b.c }))
-        });
+        setTimeout(() => {
+          setData({
+            total_requests: d.workers_flagged || 0,
+            processed: d.workers_flagged || 0,
+            high_priority: Math.floor((d.workers_flagged || 0) * 0.1),
+            critical_hotspots: d.blocks ? d.blocks.length : 0,
+            regions: (d.blocks || []).map(b => ({ id: b.block_id, requests: b.c }))
+          });
+        }, 2500); // Artificial delay to show ThoughtLine
       })
       .catch(err => {
         console.error("Backend offline, using fallback demo data:", err);
-        setData({
-          total_requests: 24500,
-          processed: 24500,
-          high_priority: 2450,
-          critical_hotspots: 5,
-          regions: [
-            { id: "Nashik", requests: 8500 },
-            { id: "Malegaon", requests: 4200 },
-            { id: "Sinnar", requests: 3100 },
-            { id: "Igatpuri", requests: 2800 },
-            { id: "Niphad", requests: 2200 }
-          ]
-        });
+        setTimeout(() => {
+          setData({
+            total_requests: 24500,
+            processed: 24500,
+            high_priority: 2450,
+            critical_hotspots: 5,
+            regions: [
+              { id: "Nashik", requests: 8500 },
+              { id: "Malegaon", requests: 4200 },
+              { id: "Sinnar", requests: 3100 },
+              { id: "Igatpuri", requests: 2800 },
+              { id: "Niphad", requests: 2200 }
+            ]
+          });
+        }, 2500); // Artificial delay to show ThoughtLine
       });
       
     fetch(`${import.meta.env.VITE_API_BASE_URL}/early_warnings`)
@@ -47,7 +52,18 @@ export default function Screen1() {
 
   if (!data) return (
     <div className="h-96 flex items-center justify-center">
-      <div className="animate-pulse-slow text-primary font-medium">Loading demand data...</div>
+      <ThoughtLine
+        working={true}
+        steps={['Establishing secure connection', 'Querying Google Vertex AI', 'Structuring demand data', 'Finalizing dashboard layout']}
+        label="Loading Demand Data…"
+        glyph="sparkle"
+        fontSize={16}
+        color="#2563eb"
+        breathPeriod={1.6}
+        breathDepth={0.45}
+        collapsible={true}
+        showTimer={true}
+      />
     </div>
   );
 

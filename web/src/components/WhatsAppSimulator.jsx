@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Image as ImageIcon, CheckCheck, User, MoreVertical, Mic, Paperclip } from 'lucide-react';
+import VoicePill from './VoicePill';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000/api';
@@ -61,19 +62,10 @@ export default function WhatsAppSimulator({ onMessageSent }) {
 
   const recognitionRef = useRef(null);
 
-  const startVoiceRecording = () => {
-    if (isRecording && recognitionRef.current) {
-      recognitionRef.current.stop();
-      return;
-    }
-
+  const startSpeechRecognition = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      setIsRecording(true);
-      setTimeout(() => {
-        setIsRecording(false);
-        setInput("Ward 15 mein paani ki pipe buri tarah toot gayi hai");
-      }, 2500);
+      alert("Browser does not support SpeechRecognition.");
       return;
     }
 
@@ -81,29 +73,43 @@ export default function WhatsAppSimulator({ onMessageSent }) {
     recognitionRef.current = recognition;
     recognition.lang = 'hi-IN';
     recognition.interimResults = true;
+    recognition.continuous = true;
 
+    // Track the fully finalized text so we don't lose it on pauses
+    let finalAccumulated = input; 
+    
     recognition.onstart = () => {
       setIsRecording(true);
-      setInput("");
+      if (!finalAccumulated) {
+        setInput("");
+      }
     };
 
     recognition.onresult = (event) => {
-      let finalTranscript = '';
       let interimTranscript = '';
+      
       for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
+          finalAccumulated += event.results[i][0].transcript + " ";
         } else {
           interimTranscript += event.results[i][0].transcript;
         }
       }
-      setInput(finalTranscript + interimTranscript);
+      
+      setInput(finalAccumulated + interimTranscript);
     };
 
     recognition.onerror = () => setIsRecording(false);
     recognition.onend = () => setIsRecording(false);
 
     recognition.start();
+  };
+
+  const stopSpeechRecognition = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    }
+    setIsRecording(false);
   };
 
   const handleSend = async (e) => {
@@ -257,14 +263,15 @@ export default function WhatsAppSimulator({ onMessageSent }) {
             <Send size={18} className="ml-0.5" />
           </button>
         ) : (
-          <button 
-            type="button" 
-            onClick={startVoiceRecording}
-            disabled={isTyping}
-            className={`p-3 rounded-full shadow-sm transition-colors ${isRecording ? 'bg-red-500 text-white animate-pulse' : 'bg-[#128C7E] text-white hover:bg-[#075E54]'}`}
-          >
-            <Mic size={18} />
-          </button>
+          <VoicePill
+            accentColor="#ffffff"
+            iconColor="#ffffff"
+            background="#128C7E"
+            size={44}
+            reactive="mic"
+            onStart={startSpeechRecognition}
+            onStop={stopSpeechRecognition}
+          />
         )}
       </form>
     </div>
